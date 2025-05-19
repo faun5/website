@@ -1,1 +1,464 @@
-a
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ash</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .profile {
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            image-rendering: pixelated;
+        }
+
+        .profile img:hover {
+            transform: scale(1.1);
+        }
+
+        .category-nav {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            animation: slideUp 0.5s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .category-nav a {
+            text-decoration: none;
+            padding: 12px 24px;
+            background-color: #43706f;
+            color: white;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 1.1em;
+            white-space: nowrap;
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        .category-nav a:hover {
+            background-color: #365a59;
+            transform: translateY(-2px);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer; /* Add cursor for interaction */
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                margin: 15px;
+            }
+
+            .category-nav {
+                gap: 10px;
+            }
+
+            .category-nav a {
+                padding: 10px 18px;
+                font-size: 1em;
+            }
+
+            .profile img {
+                width: 120px;
+                height: 120px;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .gallery img {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                margin: 10px;
+            }
+
+            .category-nav {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .category-nav a {
+                width: calc(100% - 20px);
+                max-width: 250px;
+                margin: 0 auto;
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+
+            .profile img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .gallery img {
+                height: auto;
+                max-height: 280px;
+            }
+        }
+
+        /* Fullscreen overlay styles */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+        }
+
+        .fullscreen-overlay.open {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .fullscreen-image-container {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fullscreen-image {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Ensure image fits within the container */
+            animation-duration: 0.3s;
+            animation-timing-function: ease-in-out;
+        }
+
+        .fullscreen-image.next {
+            animation-name: slideInRight;
+        }
+
+        .fullscreen-image.prev {
+            animation-name: slideInLeft;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s ease-in-out;
+            z-index: 1001;
+        }
+
+        .close-button:hover {
+            opacity: 1;
+        }
+
+        .arrow-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease-in-out;
+            user-select: none;
+            padding: 15px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.09);
+            z-index: 1001;
+        }
+
+        .arrow-button:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .prev-button {
+            left: 30px;
+        }
+
+        .next-button {
+            right: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile">
+        <img src="images/ProfilePicture.png" alt="Your Name">
+        <h1>Ash</h1>
+    </div>
+    <nav class="category-nav">
+        <a href="#" data-category="character-design">Character Design</a>
+        <a href="#" data-category="illustration">Illustration</a>
+        <a href="#" data-category="sketches">Sketches</a>
+        <a href="#" data-category="all">All</a>
+    </nav>
+    <div class="gallery">
+    </div>
+
+    <div class="fullscreen-overlay">
+        <div class="fullscreen-image-container">
+            <span class="arrow-button prev-button">&lt;</span>
+            <img src="" alt="Fullscreen Image" class="fullscreen-image">
+            <span class="arrow-button next-button">&gt;</span>
+            <span class="close-button">&times;</span>
+        </div>
+    </div>
+
+    <script>
+        const galleryDiv = document.querySelector('.gallery');
+        const categoryNav = document.querySelector('.category-nav');
+        const fullscreenOverlay = document.querySelector('.fullscreen-overlay');
+        const fullscreenImage = document.querySelector('.fullscreen-image');
+        const closeButton = document.querySelector('.close-button');
+        const prevButton = document.querySelector('.prev-button');
+        const nextButton = document.querySelector('.next-button');
+
+        let currentImageIndex = 0;
+        let currentImageList = [];
+
+        const imageFolders = {
+            'character-design': 'images/character-design',
+            'illustration': 'images/illustration',
+            'sketches': 'images/sketches',
+            'all': 'images/all'
+        };
+
+        function loadImageList(category, callback) {
+            const folder = imageFolders[category];
+            let images = [];
+
+            if (category === 'all') {
+                let allImages = [];
+                let completedRequests = 0;
+                const subfolders = Object.keys(imageFolders).filter(key => key !== 'all');
+
+                if (subfolders.length === 0) {
+                    callback([]);
+                    return;
+                }
+
+                subfolders.forEach(subfolderKey => {
+                    const subfolder = imageFolders[subfolderKey];
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', `${subfolder}/manifest.json`, true);
+                    xhr.onload = () => {
+                        if (xhr.status === 200) {
+                            const response = JSON.parse(xhr.responseText);
+                            if (Array.isArray(response.images)) {
+                                allImages = allImages.concat(response.images.map(img => `${subfolder}/${img}`));
+                            } else {
+                                console.error(`Invalid image list format for ${subfolder}`);
+                            }
+                        } else {
+                            console.error(`Failed to load image list for ${subfolder}: ${xhr.status}`);
+                        }
+                        completedRequests++;
+                        if (completedRequests === subfolders.length) {
+                            // Shuffle all images
+                            for (let i = allImages.length - 1; i > 0; i--) {
+                                const j = Math.floor(Math.random() * (i + 1));
+                                [allImages[i], allImages[j]] = [allImages[j], allImages[i]];
+                            }
+                            callback(allImages);
+                        }
+                    };
+                    xhr.onerror = () => {
+                        console.error(`Network error while loading image list for ${subfolder}`);
+                        completedRequests++;
+                        if (completedRequests === subfolders.length) {
+                            callback(allImages); // Still call callback even with errors
+                        }
+                    };
+                    xhr.send();
+                });
+            } else {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', `${folder}/manifest.json`, true);
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (Array.isArray(response.images)) {
+                            images = response.images.map(img => `${folder}/${img}`);
+                            callback(images);
+                        } else {
+                            console.error(`Invalid image list format for ${folder}`);
+                            callback([]);
+                        }
+                    } else {
+                        console.error(`Failed to load image list for ${folder}: ${xhr.status}`);
+                        callback([]);
+                    }
+                };
+                xhr.onerror = () => {
+                    console.error(`Network error while loading image list for ${folder}`);
+                    callback([]);
+                };
+                xhr.send();
+            }
+        }
+
+        function loadImages(category) {
+            galleryDiv.innerHTML = '';
+            loadImageList(category, (images) => {
+                currentImageList = images;
+                images.forEach((imagePath, index) => {
+                    const img = document.createElement('img');
+                    img.src = imagePath;
+                    img.alt = `Image ${index + 1} from ${category}`;
+                    galleryDiv.appendChild(img);
+                    img.addEventListener('click', () => openFullscreen(index));
+                });
+            });
+        }
+
+        categoryNav.addEventListener('click', (event) => {
+            if (event.target.tagName === 'A') {
+                event.preventDefault();
+                const category = event.target.dataset.category;
+                loadImages(category);
+                document.querySelectorAll('.category-nav a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            }
+        });
+
+        function openFullscreen(index) {
+            currentImageIndex = index;
+            if (currentImageList.length > 0) {
+                fullscreenImage.className = 'fullscreen-image'; // Reset animation class
+                fullscreenImage.src = currentImageList[currentImageIndex];
+                fullscreenOverlay.classList.add('open');
+            }
+        }
+
+        function closeFullscreen() {
+            fullscreenOverlay.classList.remove('open');
+        }
+
+        function nextImage() {
+            if (currentImageList.length > 0) {
+                fullscreenImage.classList.remove('prev');
+                fullscreenImage.classList.add('next');
+                setTimeout(() => {
+                    currentImageIndex = (currentImageIndex + 1) % currentImageList.length;
+                    fullscreenImage.src = currentImageList[currentImageIndex];
+                    fullscreenImage.className = 'fullscreen-image'; // Reset class after animation
+                }, 200); // Duration of the animation
+            }
+        }
+
+        function prevImage() {
+            if (currentImageList.length > 0) {
+                fullscreenImage.classList.remove('next');
+                fullscreenImage.classList.add('prev');
+                setTimeout(() => {
+                    currentImageIndex = (currentImageIndex - 1 + currentImageList.length) % currentImageList.length;
+                    fullscreenImage.src = currentImageList[currentImageIndex];
+                    fullscreenImage.className = 'fullscreen-image'; // Reset class after animation
+                }, 200); // Duration of the animation
+            }
+        }
+
+        closeButton.addEventListener('click', closeFullscreen);
+        nextButton.addEventListener('click', nextImage);
+        prevButton.addEventListener('click', prevImage);
+
+        fullscreenOverlay.addEventListener('click', (event) => {
+            if (event.target === fullscreenOverlay) {
+                closeFullscreen();
+            }
+        });
+
+        // Load 'all' images by default on page load
+        loadImages('all');
+        document.querySelector(`[data-category="all"]`).classList.add('active');
+    </script>
+</body>
+</html>
