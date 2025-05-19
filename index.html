@@ -34,14 +34,45 @@
             transform: scale(1.1);
         }
 
-        .category-nav {
-            margin-bottom: 30px;
+        .main-nav {
+            margin-bottom: 20px;
             display: flex;
             justify-content: center;
             gap: 15px;
             flex-wrap: wrap;
             animation: slideUp 0.5s ease-out 0.2s forwards;
             opacity: 0;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            padding: 12px 24px;
+            background-color: #43706f;
+            color: white;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 1.1em;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .main-nav a:hover {
+            background-color: #365a59;
+            transform: translateY(-2px);
+        }
+
+        .portfolio-link {
+            cursor: pointer;
+        }
+
+        .category-nav {
+            display: none;
+            margin-top: 20px;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .category-nav a {
@@ -55,7 +86,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             font-size: 1.1em;
             white-space: nowrap;
-            cursor: pointer; /* Change cursor to pointer */
+            cursor: pointer;
         }
 
         .category-nav a:hover {
@@ -80,11 +111,26 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
-            cursor: pointer; /* Add cursor for interaction */
+            cursor: pointer;
         }
 
         .gallery img:hover {
             transform: scale(1.05);
+        }
+
+        #home-content {
+            margin-top: 50px;
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+
+        .page-content {
+            display: none;
+            padding-top: 20px;
+        }
+
+        .page-content#home-content {
+            display: block;
         }
 
         @keyframes fadeIn {
@@ -112,11 +158,11 @@
                 margin: 15px;
             }
 
-            .category-nav {
+            .main-nav {
                 gap: 10px;
             }
 
-            .category-nav a {
+            .main-nav a, .category-nav a {
                 padding: 10px 18px;
                 font-size: 1em;
             }
@@ -141,12 +187,12 @@
                 margin: 10px;
             }
 
-            .category-nav {
+            .main-nav, .category-nav {
                 flex-direction: column;
                 gap: 8px;
             }
 
-            .category-nav a {
+            .main-nav a, .category-nav a {
                 width: calc(100% - 20px);
                 max-width: 250px;
                 margin: 0 auto;
@@ -206,7 +252,7 @@
             display: block;
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; /* Ensure image fits within the container */
+            object-fit: contain;
             animation-duration: 0.3s;
             animation-timing-function: ease-in-out;
         }
@@ -272,13 +318,33 @@
         <img src="images/ProfilePicture.png" alt="Your Name">
         <h1>Ash</h1>
     </div>
+    <nav class="main-nav">
+        <a href="#" data-page="home">Home</a>
+        <a href="#" class="portfolio-link" data-page="portfolio">Portfolio</a>
+        <a href="#" data-page="about">About</a>
+        <a href="#" data-page="contact">Contact Me</a>
+    </nav>
     <nav class="category-nav">
         <a href="#" data-category="character-design">Character Design</a>
         <a href="#" data-category="illustration">Illustration</a>
         <a href="#" data-category="sketches">Sketches</a>
         <a href="#" data-category="all">All</a>
     </nav>
-    <div class="gallery">
+    <div class="page-content" id="home-content">
+        <h2>Welcome to my Portfolio</h2>
+        <p>This is my home page. Click on the Portfolio link to see my work.</p>
+    </div>
+    <div class="page-content" id="portfolio-content">
+        <div class="gallery">
+        </div>
+    </div>
+    <div class="page-content" id="about-content">
+        <h2>About Me</h2>
+        <p>This is the about me page.</p>
+    </div>
+    <div class="page-content" id="contact-content">
+        <h2>Contact Me</h2>
+        <p>This is the contact me page.</p>
     </div>
 
     <div class="fullscreen-overlay">
@@ -292,15 +358,23 @@
 
     <script>
         const galleryDiv = document.querySelector('.gallery');
+        const mainNav = document.querySelector('.main-nav');
         const categoryNav = document.querySelector('.category-nav');
+        const portfolioLink = document.querySelector('.portfolio-link');
         const fullscreenOverlay = document.querySelector('.fullscreen-overlay');
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const closeButton = document.querySelector('.close-button');
         const prevButton = document.querySelector('.prev-button');
         const nextButton = document.querySelector('.next-button');
+        const homeContent = document.getElementById('home-content');
+        const portfolioContent = document.getElementById('portfolio-content');
+        const aboutContent = document.getElementById('about-content');
+        const contactContent = document.getElementById('contact-content');
 
         let currentImageIndex = 0;
         let currentImageList = [];
+        let portfolioVisible = false;
+        let currentPage = 'home';
 
         const imageFolders = {
             'character-design': 'images/character-design',
@@ -352,7 +426,7 @@
                         console.error(`Network error while loading image list for ${subfolder}`);
                         completedRequests++;
                         if (completedRequests === subfolders.length) {
-                            callback(allImages); // Still call callback even with errors
+                            callback(allImages);
                         }
                     };
                     xhr.send();
@@ -397,6 +471,51 @@
             });
         }
 
+        function showPage(page) {
+            homeContent.style.display = 'none';
+            portfolioContent.style.display = 'none';
+            aboutContent.style.display = 'none';
+            contactContent.style.display = 'none';
+            categoryNav.style.display = 'none';
+
+            if (page === 'home') {
+                homeContent.style.display = 'block';
+                currentPage = 'home';
+            } else if (page === 'portfolio') {
+                portfolioContent.style.display = 'block';
+                categoryNav.style.display = 'flex';
+                currentPage = 'portfolio';
+            } else if (page === 'about') {
+                aboutContent.style.display = 'block';
+                currentPage = 'about';
+            } else if (page === 'contact') {
+                contactContent.style.display = 'block';
+                currentPage = 'contact';
+            }
+        }
+
+        mainNav.addEventListener('click', (event) => {
+            if (event.target.tagName === 'A') {
+                event.preventDefault();
+                const page = event.target.dataset.page;
+                showPage(page);
+            }
+        });
+
+        portfolioLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (portfolioVisible) {
+                categoryNav.style.display = 'none';
+                portfolioVisible = false;
+                galleryDiv.style.display = 'none';
+            } else {
+                categoryNav.style.display = 'flex';
+                portfolioVisible = true;
+                galleryDiv.style.display = 'grid';
+            }
+            showPage('portfolio');
+        });
+
         categoryNav.addEventListener('click', (event) => {
             if (event.target.tagName === 'A') {
                 event.preventDefault();
@@ -412,7 +531,7 @@
         function openFullscreen(index) {
             currentImageIndex = index;
             if (currentImageList.length > 0) {
-                fullscreenImage.className = 'fullscreen-image'; // Reset animation class
+                fullscreenImage.className = 'fullscreen-image';
                 fullscreenImage.src = currentImageList[currentImageIndex];
                 fullscreenOverlay.classList.add('open');
             }
@@ -429,8 +548,8 @@
                 setTimeout(() => {
                     currentImageIndex = (currentImageIndex + 1) % currentImageList.length;
                     fullscreenImage.src = currentImageList[currentImageIndex];
-                    fullscreenImage.className = 'fullscreen-image'; // Reset class after animation
-                }, 200); // Duration of the animation
+                    fullscreenImage.className = 'fullscreen-image';
+                }, 200);
             }
         }
 
@@ -441,8 +560,8 @@
                 setTimeout(() => {
                     currentImageIndex = (currentImageIndex - 1 + currentImageList.length) % currentImageList.length;
                     fullscreenImage.src = currentImageList[currentImageIndex];
-                    fullscreenImage.className = 'fullscreen-image'; // Reset class after animation
-                }, 200); // Duration of the animation
+                    fullscreenImage.className = 'fullscreen-image';
+                }, 200);
             }
         }
 
@@ -456,9 +575,7 @@
             }
         });
 
-        // Load 'all' images by default on page load
-        loadImages('all');
-        document.querySelector(`[data-category="all"]`).classList.add('active');
+        showPage('home');
     </script>
 </body>
 </html>
