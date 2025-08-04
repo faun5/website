@@ -133,6 +133,9 @@
             width: 100%; /* Image will fill the width of its container */
             height: auto; /* Image will maintain its aspect ratio */
             display: block; /* Remove extra space below image */
+            max-width: 100%; /* Ensure image doesn't exceed its container width */
+            max-height: 300px; /* Limit image height to prevent excessive vertical space */
+            object-fit: contain; /* Ensure the whole image is visible within the max-height */
         }
 
         /* Styles for hover caption */
