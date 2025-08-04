@@ -175,6 +175,8 @@
         <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <!-- Artwork will be dynamically inserted here by JavaScript -->
         </div>
+        <div id="loading-message" class="text-center text-gray-600 mt-8 hidden">Loading artwork...</div>
+        <div id="error-message" class="text-center text-red-600 mt-8 hidden">Failed to load artwork. Please try again later.</div>
     </main>
 
     <!-- Footer Section (Optional, but good practice) -->
@@ -194,44 +196,33 @@
     </div>
 
     <script>
+        // Helper function to convert a path/filename into a clean title
+        function getTitleFromPath(path) {
+            // Get the last part of the path (the filename with extension)
+            const parts = path.split('/');
+            const filenameWithExtension = parts[parts.length - 1];
+
+            // Remove the file extension
+            const filenameWithoutExtension = filenameWithExtension.split('.')[0];
+
+            // Replace hyphens/underscores with spaces and capitalize each word
+            return filenameWithoutExtension
+                .replace(/[-_]/g, ' ') // Replace hyphens and underscores with spaces
+                .split(' ') // Split into words
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter of each word
+                .join(' '); // Join words back with spaces
+        }
+
+        // --- Global Artwork Data (will be populated from JSON) ---
+        let artworkData = [];
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Helper function to convert a path/filename into a clean title
-            function getTitleFromPath(path) {
-                // Get the last part of the path (the filename with extension)
-                const parts = path.split('/');
-                const filenameWithExtension = parts[parts.length - 1];
-
-                // Remove the file extension
-                const filenameWithoutExtension = filenameWithExtension.split('.')[0];
-
-                // Replace hyphens/underscores with spaces and capitalize each word
-                return filenameWithoutExtension
-                    .replace(/[-_]/g, ' ') // Replace hyphens and underscores with spaces
-                    .split(' ') // Split into words
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter of each word
-                    .join(' '); // Join words back with spaces
-            }
-
-            // --- Artwork Data ---
-            // Add your artwork details here.
-            // Image paths should be relative to the root of your repository (e.g., images/illustration/my-artwork.jpg)
-            // The 'title' property is now optional as it will be generated from 'src'
-            const artworkData = [
-                { src: "images/illustration/forest-spirit.jpg", category: "illustration" },
-                { src: "images/character-design/mystic-wanderer.png", category: "character-design" },
-                { src: "images/sketches/sketchbook-page.png", category: "sketches" }, // Changed placeholder filename
-                { src: "images/illustration/digital-landscape.jpg", category: "illustration" },
-                { src: "images/character-design/hero-concept.png", category: "character-design" },
-                { src: "images/sketches/quick-doodle.png", category: "sketches" }, // Changed placeholder filename
-                // Add more artwork here as objects:
-                // { src: "images/illustration/your-new-illustration.jpg", category: "illustration" },
-                // { src: "images/sketches/another-sketch.png", category: "sketches" },
-            ];
-
             // --- DOM Elements ---
             const filterButtons = document.querySelectorAll('.filter-button');
             const galleryGrid = document.getElementById('gallery-grid');
             const gallerySectionTitle = document.getElementById('gallery-section-title');
+            const loadingMessage = document.getElementById('loading-message');
+            const errorMessage = document.getElementById('error-message');
 
             const lightboxOverlay = document.getElementById('lightbox-overlay');
             const lightboxImage = document.getElementById('lightbox-image');
@@ -248,6 +239,10 @@
             // Renders gallery items based on provided data
             function renderGallery(itemsToRender) {
                 galleryGrid.innerHTML = ''; // Clear existing items
+                if (itemsToRender.length === 0) {
+                    galleryGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No artwork found in this category.</p>';
+                    return;
+                }
                 itemsToRender.forEach((artwork, index) => {
                     const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
                     const galleryItemDiv = document.createElement('div');
@@ -258,8 +253,12 @@
                     // Store original artwork data on the element for lightbox to access
                     galleryItemDiv.dataset.originalIndex = artworkData.indexOf(artwork);
 
+                    // Prepend './images/' to the src for the actual image path, as JSON src is relative to images/
+                    // Changed to absolute path from root for robustness
+                    const fullImagePath = `/images/${artwork.src}`;
+
                     galleryItemDiv.innerHTML = `
-                        <img src="${artwork.src}" alt="${artworkTitle}" class="w-full h-auto object-cover">
+                        <img src="${fullImagePath}" alt="${artworkTitle}" class="w-full h-auto object-cover">
                         <div class="p-4">
                             <p class="text-lg font-semibold artwork-title">${artworkTitle}</p>
                             <p class="text-sm text-gray-600">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
@@ -292,9 +291,11 @@
             function openLightbox(artworkIndexInFilteredList) {
                 const artwork = currentFilteredItems[artworkIndexInFilteredList];
                 const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
+                // Changed to absolute path from root for robustness
+                const fullImagePath = `/images/${artwork.src}`; // Full path for lightbox
 
                 if (lightboxImage && lightboxCaption && artwork) {
-                    lightboxImage.src = artwork.src;
+                    lightboxImage.src = fullImagePath;
                     lightboxImage.alt = artworkTitle;
                     lightboxCaption.textContent = artworkTitle;
                 }
@@ -338,9 +339,11 @@
                 if (currentFilteredItems.length === 0) return;
                 const artwork = currentFilteredItems[currentImageIndex];
                 const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
+                // Changed to absolute path from root for robustness
+                const fullImagePath = `/images/${artwork.src}`; // Full path for lightbox
 
                 if (lightboxImage && lightboxCaption && artwork) {
-                    lightboxImage.src = artwork.src;
+                    lightboxImage.src = fullImagePath;
                     lightboxImage.alt = artworkTitle;
                     lightboxCaption.textContent = artworkTitle;
                 }
@@ -418,8 +421,28 @@
                 }
             });
 
-            // --- Initial Load ---
-            filterGallery('all'); // Initially display all artwork
+            // --- Initial Data Load and Gallery Render ---
+            async function loadArtworkData() {
+                loadingMessage.classList.remove('hidden');
+                errorMessage.classList.add('hidden');
+                try {
+                    // Fetch the JSON file using an absolute path from the domain root
+                    const response = await fetch('/images/gallery-data.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    artworkData = await response.json();
+                    filterGallery('all'); // Render gallery after data is loaded
+                } catch (error) {
+                    console.error("Error loading artwork data:", error);
+                    errorMessage.classList.remove('hidden');
+                    galleryGrid.innerHTML = ''; // Clear any loading state
+                } finally {
+                    loadingMessage.classList.add('hidden');
+                }
+            }
+
+            loadArtworkData(); // Call the function to load data when the page loads
         });
     </script>
 
