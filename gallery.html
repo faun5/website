@@ -131,6 +131,36 @@
             height: 100%;
             object-fit: cover; /* Crop image to fill container */
         }
+
+        /* Styles for hover caption */
+        .gallery-item {
+            position: relative; /* Needed for absolute positioning of overlay */
+        }
+        .overlay-caption {
+            position: absolute;
+            bottom: 0; /* Position at the bottom */
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+            color: white;
+            padding: 0.75rem; /* p-3 */
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease; /* Smooth transition */
+            display: flex; /* Use flex for content alignment */
+            flex-direction: column; /* Stack title and category vertically */
+            justify-content: flex-end; /* Push content to the bottom of the overlay */
+            height: 100%; /* Cover the entire image area for hover */
+            box-sizing: border-box; /* Include padding in the height */
+        }
+        .gallery-item:hover .overlay-caption {
+            opacity: 1; /* Visible on hover */
+        }
+        .overlay-caption p {
+            margin-bottom: 0.25rem; /* Small margin between title and category */
+        }
+        .overlay-caption p:last-child {
+            margin-bottom: 0; /* No margin for the last paragraph */
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -262,7 +292,7 @@
                     galleryItemDiv.classList.add(
                         'gallery-item', 'bg-white', 'rounded-xl', 'shadow-lg', 'overflow-hidden',
                         'transform', 'hover:scale-105', 'transition', 'duration-300',
-                        'cursor-pointer', 'flex', 'flex-col' /* Added flex and flex-col for consistent height */
+                        'cursor-pointer', 'relative' /* Added relative for absolute positioning of overlay */
                     );
                     // Store original artwork data on the element for lightbox to access
                     galleryItemDiv.dataset.originalIndex = artworkData.indexOf(artwork);
@@ -274,9 +304,9 @@
                         <div class="gallery-item-image-wrapper">
                             <img src="${fullImagePath}" alt="${artworkTitle}">
                         </div>
-                        <div class="p-4 flex-grow flex flex-col justify-end">
+                        <div class="overlay-caption">
                             <p class="text-lg font-semibold artwork-title">${artworkTitle}</p>
-                            <p class="text-sm text-gray-600">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
+                            <p class="text-sm text-gray-300">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
                         </div>
                     `;
                     galleryGrid.appendChild(galleryItemDiv);
