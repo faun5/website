@@ -139,10 +139,10 @@
 
             <!-- Navigation Links -->
             <nav class="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4 mb-4 md:mb-0">
-                <a href="/index.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
-                <a href="/gallery/" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
-                <a href="/about/" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
-                <a href="/contact/" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">CONTACT</a>
+                <a href="index" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
+                <a href="gallery" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
+                <a href="about" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
+                <a href="contact" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">CONTACT</a>
             </nav>
 
             <!-- Social Media Icons -->
@@ -197,17 +197,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- Artwork Data ---
             // Add your artwork details here.
-            // Image paths should be relative to your domain root (e.g., /images/my-artwork.jpg)
+            // Image paths should be relative to the root of your repository (e.g., images/illustration/my-artwork.jpg)
             const artworkData = [
-                { src: "/images/illustration/artwork1.jpg", title: "Forest Spirit", category: "illustration" },
-                { src: "/images/character-design/artwork2.png", title: "Mystic Wanderer", category: "character-design" },
-                { src: "/images/sketches/artwork3.png", title: "Sketchbook Page", category: "sketches" },
-                { src: "/images/illustration/artwork4.jpg", title: "Digital Landscape", category: "illustration" },
-                { src: "/images/character-design/artwork5.png", title: "Hero Concept", category: "character-design" },
-                { src: "/images/sketches/artwork6.png", title: "Quick Doodle", category: "sketches" },
+                { src: "images/illustration/artwork1.jpg", title: "Forest Spirit", category: "illustration" },
+                { src: "images/character-design/artwork2.png", title: "Mystic Wanderer", category: "character-design" },
+                { src: "images/sketches/artwork3.png", title: "Sketchbook Page", category: "sketches" },
+                { src: "images/illustration/artwork4.jpg", title: "Digital Landscape", category: "illustration" },
+                { src: "images/character-design/artwork5.png", title: "Hero Concept", category: "character-design" },
+                { src: "images/sketches/artwork6.png", title: "Quick Doodle", category: "sketches" },
                 // Add more artwork here as objects:
-                // { src: "/images/illustration/your-new-illustration.jpg", title: "New Masterpiece", category: "illustration" },
-                // { src: "/images/sketches/another-sketch.png", title: "Another Sketch", category: "sketches" },
+                // { src: "images/illustration/your-new-illustration.jpg", title: "New Masterpiece", category: "illustration" },
+                // { src: "images/sketches/another-sketch.png", title: "Another Sketch", category: "sketches" },
             ];
 
             // --- DOM Elements ---
