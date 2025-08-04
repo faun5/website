@@ -139,10 +139,10 @@
 
             <!-- Navigation Links -->
             <nav class="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4 mb-4 md:mb-0">
-                <a href="index.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
-                <a href="gallery.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
-                <a href="about.html" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
-                <a href="contact.html" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">CONTACT</a>
+                <a href="/index.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
+                <a href="/gallery/" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
+                <a href="/about/" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
+                <a href="/contact/" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">CONTACT</a>
             </nav>
 
             <!-- Social Media Icons -->
@@ -171,61 +171,9 @@
         <!-- Section Title for Gallery Items -->
         <h3 id="gallery-section-title" class="text-2xl font-bold text-center mb-6">ALL</h3>
 
-        <!-- Image Gallery Grid -->
+        <!-- Image Gallery Grid - This will be populated by JavaScript -->
         <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Gallery Item 1 -->
-            <div class="gallery-item bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 cursor-pointer" data-category="illustration">
-                <img src="https://placehold.co/400x300/e0e0e0/333333?text=Artwork+1" alt="Artwork 1" class="w-full h-auto object-cover">
-                <div class="p-4">
-                    <p class="text-lg font-semibold artwork-title">Artwork Title 1</p>
-                    <p class="text-sm text-gray-600">Category: Illustration</p>
-                </div>
-            </div>
-
-            <!-- Gallery Item 2 -->
-            <div class="gallery-item bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 cursor-pointer" data-category="character-design">
-                <img src="https://placehold.co/400x300/d0d0d0/444444?text=Artwork+2" alt="Artwork 2" class="w-full h-auto object-cover">
-                <div class="p-4">
-                    <p class="text-lg font-semibold artwork-title">Artwork Title 2</p>
-                    <p class="text-sm text-gray-600">Category: Character Design</p>
-                </div>
-            </div>
-
-            <!-- Gallery Item 3 -->
-            <div class="gallery-item bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 cursor-pointer" data-category="sketches">
-                <img src="https://placehold.co/400x300/c0c0c0/555555?text=Artwork+3" alt="Artwork 3" class="w-full h-auto object-cover">
-                <div class="p-4">
-                    <p class="text-lg font-semibold artwork-title">Artwork Title 3</p>
-                    <p class="text-sm text-gray-600">Category: Sketches</p>
-                </div>
-            </div>
-
-            <!-- Gallery Item 4 -->
-            <div class="gallery-item bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 cursor-pointer" data-category="illustration">
-                <img src="https://placehold.co/400x300/b0b0b0/666666?text=Artwork+4" alt="Artwork 4" class="w-full h-auto object-cover">
-                <div class="p-4">
-                    <p class="text-lg font-semibold artwork-title">Artwork Title 4</p>
-                    <p class="text-sm text-gray-600">Category: Illustration</p>
-                </div>
-            </div>
-
-            <!-- Gallery Item 5 -->
-            <div class="gallery-item bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 cursor-pointer" data-category="character-design">
-                <img src="https://placehold.co/400x300/a0a0a0/777777?text=Artwork+5" alt="Artwork 5" class="w-full h-auto object-cover">
-                <div class="p-4">
-                    <p class="text-lg font-semibold artwork-title">Artwork Title 5</p>
-                    <p class="text-sm text-gray-600">Category: Character Design</p>
-                </div>
-            </div>
-
-            <!-- Gallery Item 6 -->
-            <div class="gallery-item bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 cursor-pointer" data-category="sketches">
-                <img src="https://placehold.co/400x300/909090/888888?text=Artwork+6" alt="Artwork 6" class="w-full h-auto object-cover">
-                <div class="p-4">
-                    <p class="text-lg font-semibold artwork-title">Artwork Title 6</p>
-                    <p class="text-sm text-gray-600">Category: Sketches</p>
-                </div>
-            </div>
+            <!-- Artwork will be dynamically inserted here by JavaScript -->
         </div>
     </main>
 
@@ -247,8 +195,24 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Artwork Data ---
+            // Add your artwork details here.
+            // Image paths should be relative to your domain root (e.g., /images/my-artwork.jpg)
+            const artworkData = [
+                { src: "/images/illustration/artwork1.jpg", title: "Forest Spirit", category: "illustration" },
+                { src: "/images/character-design/artwork2.png", title: "Mystic Wanderer", category: "character-design" },
+                { src: "/images/sketches/artwork3.png", title: "Sketchbook Page", category: "sketches" },
+                { src: "/images/illustration/artwork4.jpg", title: "Digital Landscape", category: "illustration" },
+                { src: "/images/character-design/artwork5.png", title: "Hero Concept", category: "character-design" },
+                { src: "/images/sketches/artwork6.png", title: "Quick Doodle", category: "sketches" },
+                // Add more artwork here as objects:
+                // { src: "/images/illustration/your-new-illustration.jpg", title: "New Masterpiece", category: "illustration" },
+                // { src: "/images/sketches/another-sketch.png", title: "Another Sketch", category: "sketches" },
+            ];
+
+            // --- DOM Elements ---
             const filterButtons = document.querySelectorAll('.filter-button');
-            const galleryItems = document.querySelectorAll('.gallery-item');
+            const galleryGrid = document.getElementById('gallery-grid');
             const gallerySectionTitle = document.getElementById('gallery-section-title');
 
             const lightboxOverlay = document.getElementById('lightbox-overlay');
@@ -258,21 +222,45 @@
             const lightboxPrev = document.getElementById('lightbox-prev');
             const lightboxNext = document.getElementById('lightbox-next');
 
-            let currentFilteredItems = [];
-            let currentImageIndex = 0;
+            let currentFilteredItems = []; // Stores the currently visible artwork data objects
+            let currentImageIndex = 0; // Index of the currently displayed image in the lightbox
 
-            function filterGallery(category) {
-                currentFilteredItems = [];
-                galleryItems.forEach(item => {
-                    const itemCategory = item.dataset.category;
-                    if (category === 'all' || itemCategory === category) {
-                        item.style.display = 'block';
-                        currentFilteredItems.push(item);
-                    } else {
-                        item.style.display = 'none';
-                    }
+            // --- Functions ---
+
+            // Renders gallery items based on provided data
+            function renderGallery(itemsToRender) {
+                galleryGrid.innerHTML = ''; // Clear existing items
+                itemsToRender.forEach((artwork, index) => {
+                    const galleryItemDiv = document.createElement('div');
+                    galleryItemDiv.classList.add(
+                        'gallery-item', 'bg-white', 'rounded-xl', 'shadow-lg', 'overflow-hidden',
+                        'transform', 'hover:scale-105', 'transition', 'duration-300', 'cursor-pointer'
+                    );
+                    // Store original artwork data on the element for lightbox to access
+                    galleryItemDiv.dataset.originalIndex = artworkData.indexOf(artwork);
+
+                    galleryItemDiv.innerHTML = `
+                        <img src="${artwork.src}" alt="${artwork.title}" class="w-full h-auto object-cover">
+                        <div class="p-4">
+                            <p class="text-lg font-semibold artwork-title">${artwork.title}</p>
+                            <p class="text-sm text-gray-600">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
+                        </div>
+                    `;
+                    galleryGrid.appendChild(galleryItemDiv);
                 });
+            }
 
+            // Filters artworkData and then renders the filtered subset
+            function filterGallery(category) {
+                currentFilteredItems = []; // Reset filtered items
+                if (category === 'all') {
+                    currentFilteredItems = [...artworkData]; // Copy all artwork data
+                } else {
+                    currentFilteredItems = artworkData.filter(artwork => artwork.category === category);
+                }
+                renderGallery(currentFilteredItems); // Re-render the gallery with filtered items
+
+                // Update the section title
                 if (category === 'all') {
                     gallerySectionTitle.textContent = 'ALL';
                 } else {
@@ -281,17 +269,19 @@
                 }
             }
 
-            function openLightbox(itemElement) {
-                const img = itemElement.querySelector('img');
-                const title = itemElement.querySelector('.artwork-title').textContent;
+            // Opens the lightbox
+            function openLightbox(artworkIndexInFilteredList) {
+                const artwork = currentFilteredItems[artworkIndexInFilteredList];
 
-                lightboxImage.src = img.src;
-                lightboxImage.alt = img.alt;
-                lightboxCaption.textContent = title;
+                if (lightboxImage && lightboxCaption && artwork) {
+                    lightboxImage.src = artwork.src;
+                    lightboxImage.alt = artwork.title;
+                    lightboxCaption.textContent = artwork.title;
+                }
 
-                currentImageIndex = currentFilteredItems.indexOf(itemElement);
+                currentImageIndex = artworkIndexInFilteredList;
 
-                if (lightboxOverlay) { // Added null check for lightboxOverlay
+                if (lightboxOverlay) {
                     lightboxOverlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
                 } else {
@@ -299,8 +289,9 @@
                 }
             }
 
+            // Closes the lightbox
             function closeLightbox() {
-                if (lightboxOverlay) { // Added null check for lightboxOverlay
+                if (lightboxOverlay) {
                     lightboxOverlay.classList.remove('active');
                     document.body.style.overflow = '';
                 } else {
@@ -308,29 +299,35 @@
                 }
             }
 
+            // Shows the next image in the lightbox
             function showNextImage() {
-                if (currentFilteredItems.length === 0) return; // Prevent error if no items
+                if (currentFilteredItems.length === 0) return;
                 currentImageIndex = (currentImageIndex + 1) % currentFilteredItems.length;
                 updateLightboxImage();
             }
 
+            // Shows the previous image in the lightbox
             function showPrevImage() {
-                if (currentFilteredItems.length === 0) return; // Prevent error if no items
+                if (currentFilteredItems.length === 0) return;
                 currentImageIndex = (currentImageIndex - 1 + currentFilteredItems.length) % currentFilteredItems.length;
                 updateLightboxImage();
             }
 
+            // Updates the lightbox image and caption
             function updateLightboxImage() {
-                if (currentFilteredItems.length === 0) return; // Prevent error if no items
-                const nextItem = currentFilteredItems[currentImageIndex];
-                const nextImg = nextItem.querySelector('img');
-                const nextTitle = nextItem.querySelector('.artwork-title').textContent;
+                if (currentFilteredItems.length === 0) return;
+                const artwork = currentFilteredItems[currentImageIndex];
 
-                lightboxImage.src = nextImg.src;
-                lightboxImage.alt = nextImg.alt;
-                lightboxCaption.textContent = nextTitle;
+                if (lightboxImage && lightboxCaption && artwork) {
+                    lightboxImage.src = artwork.src;
+                    lightboxImage.alt = artwork.title;
+                    lightboxCaption.textContent = artwork.title;
+                }
             }
 
+            // --- Event Listeners ---
+
+            // Filter buttons
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -340,11 +337,26 @@
                 });
             });
 
-            galleryItems.forEach(item => {
-                item.addEventListener('click', () => openLightbox(item));
-            });
+            // Event delegation for gallery item clicks (since they are dynamically added)
+            if (galleryGrid) {
+                galleryGrid.addEventListener('click', (e) => {
+                    const clickedItem = e.target.closest('.gallery-item');
+                    if (clickedItem) {
+                        // Find the index of the clicked item within the currentFilteredItems array
+                        const originalIndex = parseInt(clickedItem.dataset.originalIndex);
+                        const artworkInFullList = artworkData[originalIndex];
+                        const indexInFilteredList = currentFilteredItems.indexOf(artworkInFullList);
+                        if (indexInFilteredList !== -1) {
+                            openLightbox(indexInFilteredList);
+                        }
+                    }
+                });
+            } else {
+                console.error("Error: galleryGrid element not found. Cannot attach click listener.");
+            }
 
-            // Add null checks before attaching event listeners
+
+            // Lightbox controls
             if (lightboxClose) {
                 lightboxClose.addEventListener('click', closeLightbox);
             } else {
@@ -361,7 +373,7 @@
                 console.error("Error: lightboxNext element not found. Cannot attach event listener.");
             }
 
-            // Added null check for lightboxOverlay before adding its event listener
+            // Close lightbox when clicking outside the content (but not on nav buttons)
             if (lightboxOverlay) {
                 lightboxOverlay.addEventListener('click', (e) => {
                     if (e.target === lightboxOverlay || e.target.closest('.lightbox-content') === null && e.target.closest('.lightbox-nav') === null) {
@@ -372,9 +384,9 @@
                 console.error("Error: lightboxOverlay element not found. Cannot attach click listener.");
             }
 
-
+            // Keyboard navigation for lightbox
             document.addEventListener('keydown', (e) => {
-                if (lightboxOverlay && lightboxOverlay.classList.contains('active')) { // Added null check for lightboxOverlay
+                if (lightboxOverlay && lightboxOverlay.classList.contains('active')) {
                     if (e.key === 'ArrowRight') {
                         showNextImage();
                     } else if (e.key === 'ArrowLeft') {
@@ -385,7 +397,8 @@
                 }
             });
 
-            filterGallery('all');
+            // --- Initial Load ---
+            filterGallery('all'); // Initially display all artwork
         });
     </script>
 
