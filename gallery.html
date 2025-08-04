@@ -372,12 +372,14 @@
                     );
 
                     // Add responsive width classes based on breakpoints
+                    // These classes are crucial for Masonry to calculate column widths correctly
                     galleryItemDiv.classList.add('w-full', 'sm:w-1/2', 'md:w-1/3', 'lg:w-1/4');
 
                     // Add Masonry.js specific class for wide items
                     if (artwork.isWide) {
-                        galleryItemDiv.classList.remove('sm:w-1/2', 'md:w-1/3', 'lg:w-1/4'); // Remove single column width
-                        galleryItemDiv.classList.add('sm:w-full', 'md:w-2/3', 'lg:w-1/2'); // Apply wide width
+                        // Remove single column width classes and add wide width classes
+                        galleryItemDiv.classList.remove('sm:w-1/2', 'md:w-1/3', 'lg:w-1/4');
+                        galleryItemDiv.classList.add('sm:w-full', 'md:w-2/3', 'lg:w-1/2');
                         galleryItemDiv.classList.add('grid-item--width2'); // Masonry specific class
                     }
 
