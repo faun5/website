@@ -46,5 +46,41 @@
   {
     "src": "character-design/Vaporeon-+-Dhelmise.png",
     "category": "character-design"
+  },
+   {
+    "src": "images/character-design/Basculegion-+-Feraligatr.png",
+    "category": "character-design"
+  },
+  {
+    "src": "images/character-design/Hisuian-Decidueye-+-Honedge.png",
+    "category": "character-design"
+  },
+  {
+    "src": "images/character-design/Shiny-Furret-+-Greninja.png",
+    "category": "character-design"
+  },
+  {
+    "src": "images/illustration/chocemi-lps.png",
+    "category": "illustration"
+  },
+  {
+    "src": "images/illustration/fresa-lps.png",
+    "category": "illustration"
+  },
+  {
+    "src": "images/illustration/nite.png",
+    "category": "illustration"
+  },
+  {
+    "src": "images/illustration/phyllo-lps.png",
+    "category": "illustration"
+  },
+  {
+    "src": "images/illustration/remmi-lps.png",
+    "category": "illustration"
+  },
+  {
+    "src": "images/illustration/viper-lps.png",
+    "category": "illustration"
   }
 ]
