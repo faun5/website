@@ -123,11 +123,11 @@
         /* Custom style for gallery item image container */
         .gallery-item-image-wrapper {
             width: 100%;
-            /* Removed fixed height and object-fit: cover */
-            overflow: hidden; /* Still hide overflowing parts if image aspect ratio is very wide */
-            display: flex; /* Use flex to center image if it's smaller than wrapper */
-            align-items: center; /* Center image vertically */
-            justify-content: center; /* Center image horizontally */
+            height: auto; /* Image will maintain its aspect ratio */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .gallery-item-image-wrapper img {
             width: 100%; /* Image will fill the width of its container */
@@ -138,7 +138,6 @@
         /* Styles for hover caption */
         .gallery-item {
             position: relative; /* Needed for absolute positioning of overlay */
-            /* Removed flex and flex-col from here, as card height is now dynamic */
         }
         .overlay-caption {
             position: absolute;
@@ -164,6 +163,37 @@
         }
         .overlay-caption p:last-child {
             margin-bottom: 0; /* No margin for the last paragraph */
+        }
+
+        /* Masonry Grid Specific Styles (Simplified for Masonry.js) */
+        #gallery-grid {
+            display: grid; /* Keep grid for column definition */
+            grid-template-columns: repeat(1, 1fr); /* Default for mobile */
+            gap: 1.5rem; /* Tailwind gap-6 */
+            /* grid-auto-rows and grid-row-end are no longer needed, Masonry handles positioning */
+        }
+
+        @media (min-width: 640px) { /* sm breakpoint */
+            #gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) { /* md breakpoint */
+            #gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) { /* lg breakpoint */
+            #gallery-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Masonry.js specific class for wide items */
+        .grid-item--width2 {
+            grid-column: span 2; /* Make item span 2 columns */
         }
     </style>
 </head>
@@ -241,6 +271,9 @@
         <button id="lightbox-next" class="lightbox-nav right"><i class="fas fa-chevron-right"></i></button>
     </div>
 
+    <!-- Masonry.js CDN -->
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
     <script>
         // Helper function to convert a path/filename into a clean title
         function getTitleFromPath(path) {
@@ -262,6 +295,7 @@
 
         // --- Global Artwork Data (will be populated from JSON) ---
         let artworkData = [];
+        let masonryInstance; // To store the Masonry instance
 
         document.addEventListener('DOMContentLoaded', () => {
             // --- DOM Elements ---
@@ -283,13 +317,35 @@
 
             // --- Functions ---
 
+            // Initializes or re-initializes Masonry
+            function initializeMasonry() {
+                if (masonryInstance) {
+                    masonryInstance.destroy(); // Destroy existing instance if it exists
+                }
+                masonryInstance = new Masonry(galleryGrid, {
+                    itemSelector: '.gallery-item',
+                    columnWidth: '.gallery-item', // Masonry will calculate column width based on item width
+                    gutter: 24, // Matches Tailwind gap-6 (1.5rem = 24px)
+                    percentPosition: true, // Use percentages for column widths
+                    transitionDuration: '0.4s' // Smooth transitions for layout changes
+                });
+            }
+
             // Renders gallery items based on provided data
             function renderGallery(itemsToRender) {
                 galleryGrid.innerHTML = ''; // Clear existing items
                 if (itemsToRender.length === 0) {
                     galleryGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No artwork found in this category.</p>';
+                    // If no items, destroy Masonry instance to prevent errors
+                    if (masonryInstance) {
+                        masonryInstance.destroy();
+                        masonryInstance = null;
+                    }
                     return;
                 }
+
+                const fragment = document.createDocumentFragment(); // Use a document fragment for better performance
+
                 itemsToRender.forEach((artwork, index) => {
                     const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
                     const galleryItemDiv = document.createElement('div');
@@ -298,6 +354,12 @@
                         'transform', 'hover:scale-105', 'transition', 'duration-300',
                         'cursor-pointer', 'relative' /* Added relative for absolute positioning of overlay */
                     );
+
+                    // Add Masonry.js specific class for wide items
+                    if (artwork.isWide) {
+                        galleryItemDiv.classList.add('grid-item--width2');
+                    }
+
                     // Store original artwork data on the element for lightbox to access
                     galleryItemDiv.dataset.originalIndex = artworkData.indexOf(artwork);
 
@@ -313,8 +375,34 @@
                             <p class="text-sm text-gray-300">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
                         </div>
                     `;
-                    galleryGrid.appendChild(galleryItemDiv);
+                    fragment.appendChild(galleryItemDiv);
+
+                    // Tell Masonry to relayout after each image loads
+                    const imgElement = galleryItemDiv.querySelector('img');
+                    imgElement.onload = () => {
+                        if (masonryInstance) {
+                            masonryInstance.layout();
+                        }
+                    };
+                    // Also layout if image is already cached
+                    if (imgElement.complete) {
+                        if (masonryInstance) {
+                            masonryInstance.layout();
+                        }
+                    }
                 });
+
+                galleryGrid.appendChild(fragment); // Append all items at once
+
+                // Initialize Masonry after all items are added to the DOM
+                initializeMasonry();
+
+                // Layout again after a short delay to ensure all elements are rendered
+                setTimeout(() => {
+                    if (masonryInstance) {
+                        masonryInstance.layout();
+                    }
+                }, 100);
             }
 
             // Filters artworkData and then renders the filtered subset
@@ -331,7 +419,7 @@
                 if (category === 'all') {
                     gallerySectionTitle.textContent = 'ALL';
                 } else {
-                    const titleCaseCategory = artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); // Fixed category title case
+                    const titleCaseCategory = category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
                     gallerySectionTitle.textContent = titleCaseCategory;
                 }
             }
