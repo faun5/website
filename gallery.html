@@ -195,19 +195,37 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Helper function to convert a path/filename into a clean title
+            function getTitleFromPath(path) {
+                // Get the last part of the path (the filename with extension)
+                const parts = path.split('/');
+                const filenameWithExtension = parts[parts.length - 1];
+
+                // Remove the file extension
+                const filenameWithoutExtension = filenameWithExtension.split('.')[0];
+
+                // Replace hyphens/underscores with spaces and capitalize each word
+                return filenameWithoutExtension
+                    .replace(/[-_]/g, ' ') // Replace hyphens and underscores with spaces
+                    .split(' ') // Split into words
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter of each word
+                    .join(' '); // Join words back with spaces
+            }
+
             // --- Artwork Data ---
             // Add your artwork details here.
             // Image paths should be relative to the root of your repository (e.g., images/illustration/my-artwork.jpg)
+            // The 'title' property is now optional as it will be generated from 'src'
             const artworkData = [
-                { src: "images/illustration/artwork1.jpg", title: "Forest Spirit", category: "illustration" },
-                { src: "images/character-design/artwork2.png", title: "Mystic Wanderer", category: "character-design" },
-                { src: "images/sketches/artwork3.png", title: "Sketchbook Page", category: "sketches" },
-                { src: "images/illustration/artwork4.jpg", title: "Digital Landscape", category: "illustration" },
-                { src: "images/character-design/artwork5.png", title: "Hero Concept", category: "character-design" },
-                { src: "images/sketches/artwork6.png", title: "Quick Doodle", category: "sketches" },
+                { src: "images/illustration/forest-spirit.jpg", category: "illustration" },
+                { src: "images/character-design/mystic-wanderer.png", category: "character-design" },
+                { src: "images/sketches/sketchbook-page.png", category: "sketches" }, // Changed placeholder filename
+                { src: "images/illustration/digital-landscape.jpg", category: "illustration" },
+                { src: "images/character-design/hero-concept.png", category: "character-design" },
+                { src: "images/sketches/quick-doodle.png", category: "sketches" }, // Changed placeholder filename
                 // Add more artwork here as objects:
-                // { src: "images/illustration/your-new-illustration.jpg", title: "New Masterpiece", category: "illustration" },
-                // { src: "images/sketches/another-sketch.png", title: "Another Sketch", category: "sketches" },
+                // { src: "images/illustration/your-new-illustration.jpg", category: "illustration" },
+                // { src: "images/sketches/another-sketch.png", category: "sketches" },
             ];
 
             // --- DOM Elements ---
@@ -231,6 +249,7 @@
             function renderGallery(itemsToRender) {
                 galleryGrid.innerHTML = ''; // Clear existing items
                 itemsToRender.forEach((artwork, index) => {
+                    const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
                     const galleryItemDiv = document.createElement('div');
                     galleryItemDiv.classList.add(
                         'gallery-item', 'bg-white', 'rounded-xl', 'shadow-lg', 'overflow-hidden',
@@ -240,9 +259,9 @@
                     galleryItemDiv.dataset.originalIndex = artworkData.indexOf(artwork);
 
                     galleryItemDiv.innerHTML = `
-                        <img src="${artwork.src}" alt="${artwork.title}" class="w-full h-auto object-cover">
+                        <img src="${artwork.src}" alt="${artworkTitle}" class="w-full h-auto object-cover">
                         <div class="p-4">
-                            <p class="text-lg font-semibold artwork-title">${artwork.title}</p>
+                            <p class="text-lg font-semibold artwork-title">${artworkTitle}</p>
                             <p class="text-sm text-gray-600">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
                         </div>
                     `;
@@ -272,11 +291,12 @@
             // Opens the lightbox
             function openLightbox(artworkIndexInFilteredList) {
                 const artwork = currentFilteredItems[artworkIndexInFilteredList];
+                const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
 
                 if (lightboxImage && lightboxCaption && artwork) {
                     lightboxImage.src = artwork.src;
-                    lightboxImage.alt = artwork.title;
-                    lightboxCaption.textContent = artwork.title;
+                    lightboxImage.alt = artworkTitle;
+                    lightboxCaption.textContent = artworkTitle;
                 }
 
                 currentImageIndex = artworkIndexInFilteredList;
@@ -317,11 +337,12 @@
             function updateLightboxImage() {
                 if (currentFilteredItems.length === 0) return;
                 const artwork = currentFilteredItems[currentImageIndex];
+                const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
 
                 if (lightboxImage && lightboxCaption && artwork) {
                     lightboxImage.src = artwork.src;
-                    lightboxImage.alt = artwork.title;
-                    lightboxCaption.textContent = artwork.title;
+                    lightboxImage.alt = artworkTitle;
+                    lightboxCaption.textContent = artworkTitle;
                 }
             }
 
