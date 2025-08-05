@@ -357,6 +357,7 @@
                 }
 
                 const fragment = document.createDocumentFragment(); // Use a document fragment for better performance
+                const imageLoadPromises = []; // To track image loading
 
                 itemsToRender.forEach((artwork, index) => {
                     const artworkTitle = getTitleFromPath(artwork.src); // Get title automatically
@@ -378,26 +379,48 @@
                     // Prepend '/images/' to the src for the actual image path, as JSON src is relative to images/
                     const fullImagePath = `/images/${artwork.src}`;
 
-                    galleryItemDiv.innerHTML = `
-                        <div class="gallery-item-image-wrapper">
-                            <img src="${fullImagePath}" alt="${artworkTitle}">
-                        </div>
-                        <div class="overlay-caption">
-                            <p class="text-lg font-semibold artwork-title">${artworkTitle}</p>
-                            <p class="text-sm text-gray-300">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
-                        </div>
+                    const imgElement = document.createElement('img');
+                    imgElement.src = fullImagePath;
+                    imgElement.alt = artworkTitle;
+                    imgElement.classList.add('w-full', 'h-auto', 'max-w-full', 'max-h-[300px]', 'object-contain', 'block');
+
+                    const imageWrapperDiv = document.createElement('div');
+                    imageWrapperDiv.classList.add('gallery-item-image-wrapper');
+                    imageWrapperDiv.appendChild(imgElement);
+
+                    const overlayCaptionDiv = document.createElement('div');
+                    overlayCaptionDiv.classList.add('overlay-caption');
+                    overlayCaptionDiv.innerHTML = `
+                        <p class="text-lg font-semibold artwork-title">${artworkTitle}</p>
+                        <p class="text-sm text-gray-300">Category: ${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
                     `;
+
+                    galleryItemDiv.appendChild(imageWrapperDiv);
+                    galleryItemDiv.appendChild(overlayCaptionDiv);
                     fragment.appendChild(galleryItemDiv);
 
-                    // Set masonry position after the item is added to the DOM and image loads
-                    // We call it directly here, and it handles its own onload
-                    setMasonryItemPosition(galleryItemDiv);
+                    // Create a promise that resolves when the image loads
+                    imageLoadPromises.push(new Promise(resolve => {
+                        if (imgElement.complete) {
+                            resolve();
+                        } else {
+                            imgElement.onload = resolve;
+                            imgElement.onerror = resolve; // Resolve even on error to not block layout
+                        }
+                    }));
                 });
 
                 galleryGrid.appendChild(fragment); // Append all items at once
 
+                // Wait for all images to load, then set masonry positions
+                Promise.all(imageLoadPromises).then(() => {
+                    const items = galleryGrid.querySelectorAll('.gallery-item');
+                    items.forEach(item => {
+                        setMasonryItemPosition(item);
+                    });
+                });
+
                 // Recalculate all masonry positions on window resize
-                // This is crucial for responsiveness without Masonry.js
                 window.removeEventListener('resize', debounceRecalculateMasonry); // Remove previous listener
                 window.addEventListener('resize', debounceRecalculateMasonry);
             }
