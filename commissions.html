@@ -40,6 +40,7 @@
         .carousel-slides {
             display: flex;
             transition: transform 0.5s ease-in-out;
+            touch-action: pan-y; /* Allow vertical scrolling, prevent horizontal default */
         }
         .carousel-slide {
             min-width: 100%;
@@ -134,11 +135,11 @@
 
             <!-- Navigation Links -->
             <nav class="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4 mb-4 md:mb-0">
-                <a href="index.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
-                <a href="gallery.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
-                <a href="commissions.html" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">COMMISSIONS</a>
-                <a href="about.html" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
-                <a href="contact.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">CONTACT</a>
+                <a href="index" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
+                <a href="gallery" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
+                <a href="commissions" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">COMMISSIONS</a>
+                <a href="about" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
+                <a href="contact" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">CONTACT</a>
             </nav>
 
             <!-- Social Media Icons -->
@@ -183,7 +184,7 @@
                         <div class="carousel-slide">
                             <!-- Replace src with your actual image path -->
                             <img src="/images/commissions/findus.png" alt="Findus" draggable="false">
-                        </div>                        
+                        </div>
                     </div>
                     <button class="carousel-button prev" id="ych1-carousel-prev"><i class="fas fa-chevron-left"></i></button>
                     <button class="carousel-button next" id="ych1-carousel-next"><i class="fas fa-chevron-right"></i></button>
@@ -288,7 +289,7 @@
                     Please read my full <a href="#" class="text-pink-500 hover:underline">Terms of Service</a> before commissioning.
                     PayPal only. I require 100% payment upfront for all commissions. Revisions are limited to sketches and flat colors.
                 </p>
-                <a href="contact.html" class="inline-block bg-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-pink-600 transition duration-300 shadow-md">
+                <a href="contact" class="inline-block bg-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-pink-600 transition duration-300 shadow-md">
                     Inquire About a Commission
                 </a>
             </div>
@@ -315,15 +316,40 @@
                 this.dotsContainer = document.getElementById(containerId.replace('slides', 'dots'));
                 this.currentIndex = 0;
 
+                this.startX = 0;
+                this.endX = 0;
+
                 this.init();
             }
 
-            init() {
+            async init() { // Made init async
                 if (!this.slides.length) return; // No slides to show
 
+                await this.loadCurrentSlideImages(); // Wait for images to load
                 this.updateCarousel();
                 this.prevButton.addEventListener('click', () => this.navigate(-1));
                 this.nextButton.addEventListener('click', () => this.navigate(1));
+
+                // Add touch event listeners for mobile swiping
+                this.slidesContainer.addEventListener('touchstart', this.handleTouchStart.bind(this));
+                this.slidesContainer.addEventListener('touchmove', this.handleTouchMove.bind(this));
+                this.slidesContainer.addEventListener('touchend', this.handleTouchEnd.bind(this));
+            }
+
+            async loadCurrentSlideImages() { // New method to load images in current slide
+                const currentSlide = this.slides[this.currentIndex];
+                const images = currentSlide.querySelectorAll('img');
+                const imageLoadPromises = Array.from(images).map(img => {
+                    return new Promise(resolve => {
+                        if (img.complete) {
+                            resolve();
+                        } else {
+                            img.onload = resolve;
+                            img.onerror = resolve; // Resolve even on error to not block
+                        }
+                    });
+                });
+                await Promise.all(imageLoadPromises);
             }
 
             updateCarousel() {
@@ -339,17 +365,52 @@
                     if (index === this.currentIndex) {
                         dot.classList.add('active');
                     }
-                    dot.addEventListener('click', () => {
+                    dot.addEventListener('click', async () => { // Made dot click async
                         this.currentIndex = index;
+                        await this.loadCurrentSlideImages(); // Wait for images to load
                         this.updateCarousel();
                     });
                     this.dotsContainer.appendChild(dot);
                 });
             }
 
-            navigate(direction) {
+            async navigate(direction) { // Made navigate async
                 this.currentIndex = (this.currentIndex + direction + this.slides.length) % this.slides.length;
+                await this.loadCurrentSlideImages(); // Wait for images to load
                 this.updateCarousel();
+            }
+
+            handleTouchStart(e) {
+                this.startX = e.touches[0].clientX;
+                // Temporarily disable transition for smoother dragging
+                this.slidesContainer.style.transition = 'none';
+            }
+
+            handleTouchMove(e) {
+                this.endX = e.touches[0].clientX;
+                const diff = this.startX - this.endX;
+                // Move the slides as the user drags
+                this.slidesContainer.style.transform = `translateX(${-this.currentIndex * 100 - (diff / this.slidesContainer.offsetWidth) * 100}%)`;
+            }
+
+            async handleTouchEnd() { // Made handleTouchEnd async
+                // Re-enable transition
+                this.slidesContainer.style.transition = 'transform 0.5s ease-in-out';
+
+                const threshold = 50; // Minimum swipe distance to trigger navigation
+                const diff = this.startX - this.endX;
+
+                if (diff > threshold) {
+                    await this.navigate(1); // Swipe left (next)
+                } else if (diff < -threshold) {
+                    await this.navigate(-1); // Swipe right (prev)
+                } else {
+                    // If not a significant swipe, return to current slide
+                    await this.loadCurrentSlideImages(); // Ensure current slide images are loaded before snapping back
+                    this.updateCarousel();
+                }
+                this.startX = 0;
+                this.endX = 0;
             }
         }
 
