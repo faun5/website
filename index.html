@@ -15,6 +15,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8f8f8; /* Light background similar to the image */
         }
+        /* Custom styles for the colorful dots (now pastel pink-toned) */
         .color-dot {
             width: 8px;
             height: 8px;
@@ -26,6 +27,51 @@
         .dot-pastel-pink-2 { background-color: #fecdd3; } /* Tailwind rose-200 */
         .dot-pastel-purple { background-color: #e9d5ff; } /* Tailwind purple-200 */
         .dot-pastel-fuchsia { background-color: #f5d0fe; } /* Tailwind fuchsia-200 */
+
+        /* Spinning Star Animation */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin 8s linear infinite; /* Adjust speed as needed */
+        }
+
+        /* Positioning for the decorative stars */
+        .welcome-box-wrapper {
+            position: relative; /* Crucial for positioning the absolute stars */
+            display: inline-block; /* To make wrapper size to content and allow margin auto */
+            margin: 0 auto; /* Center the wrapper */
+        }
+
+        .decorative-star {
+            position: absolute;
+            font-size: 3rem; /* Adjust size of the stars */
+            color: #fbcfe8; /* Pastel pink color */
+            filter: drop-shadow(0 0 5px rgba(251, 207, 232, 0.7)); /* Soft glow */
+            z-index: 10; /* Ensure they overlap the box */
+        }
+
+        .star-top-right {
+            top: -1.5rem; /* Adjust to overlap */
+            right: -1.5rem; /* Adjust to overlap */
+            transform: rotate(20deg); /* Initial rotation for visual interest */
+        }
+
+        .star-bottom-left {
+            bottom: -1.5rem; /* Adjust to overlap */
+            left: -1.5rem; /* Adjust to overlap */
+            transform: rotate(-20deg); /* Initial rotation for visual interest */
+        }
+
+        /* Featured Artwork Image Style */
+        .featured-artwork-item img {
+            width: 100%;
+            height: 200px; /* Fixed height for consistency */
+            object-fit: contain; /* Ensures the whole image is visible, no cropping */
+            background-color: #f0f0f0; /* Light background for images with transparent areas */
+            border-radius: 0.5rem;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -65,19 +111,26 @@
 
     <!-- Main Content - Hero Section -->
     <main class="container mx-auto px-4 py-16 text-center">
-        <div class="bg-white rounded-xl shadow-lg p-8 md:p-12 max-w-3xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-pink-600 mb-6">Welcome to faun5's Art Portfolio!</h2>
-            <p class="text-lg text-gray-700 mb-8">
-                Explore a vibrant world of illustrations, character designs, and sketches.
-                I'm a passionate artist dedicated to bringing imaginative concepts to life.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="gallery" class="bg-pink-500 text-white px-8 py-4 rounded-lg font-medium text-lg hover:bg-pink-600 transition duration-300 shadow-md">
-                    View My Gallery
-                </a>
-                <a href="commissions" class="bg-rose-400 text-white px-8 py-4 rounded-lg font-medium text-lg hover:bg-rose-500 transition duration-300 shadow-md">
-                    Commission Me
-                </a>
+        <!-- Wrapper for the welcome box to position stars relative to it -->
+        <div class="welcome-box-wrapper">
+            <!-- Decorative Stars -->
+            <i class="fas fa-star decorative-star star-top-right animate-spin-slow"></i>
+            <i class="fas fa-star decorative-star star-bottom-left animate-spin-slow" style="animation-delay: 1s;"></i>
+
+            <!-- Welcome Box Content -->
+            <div id="welcome-box" class="bg-white rounded-xl shadow-lg p-8 md:p-12 max-w-3xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-extrabold text-pink-600 mb-4">FAUN5'S WEBSITE</h2>
+                <p class="text-lg md:text-xl text-gray-700 mb-8">
+                    Explore my website! Here you can see my portfolio, contact info, commission info and even more info... about me!
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="gallery" class="bg-pink-500 text-white px-6 py-3 rounded-lg font-medium text-lg hover:bg-pink-600 transition duration-300 shadow-md">
+                        View My Gallery
+                    </a>
+                    <a href="commissions" class="bg-rose-400 text-white px-6 py-3 rounded-lg font-medium text-lg hover:bg-rose-500 transition duration-300 shadow-md">
+                        Commission Me
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -140,9 +193,9 @@
                     const fullImagePath = `/images/${artwork.src}`; // Prepend /images/
 
                     const artworkCard = document.createElement('div');
-                    artworkCard.classList.add('bg-white', 'rounded-xl', 'shadow-lg', 'overflow-hidden');
+                    artworkCard.classList.add('bg-white', 'rounded-xl', 'shadow-lg', 'overflow-hidden', 'featured-artwork-item'); /* Added featured-artwork-item class */
                     artworkCard.innerHTML = `
-                        <img src="${fullImagePath}" alt="${artworkTitle}" class="w-full h-48 object-cover">
+                        <img src="${fullImagePath}" alt="${artworkTitle}">
                         <div class="p-4">
                             <h4 class="font-semibold text-lg">${artworkTitle}</h4>
                             <p class="text-gray-600 text-sm">${artwork.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
@@ -158,6 +211,20 @@
                 featuredLoadingMessage.classList.add('hidden');
             }
         });
+
+        // Disable Inspect Element (F12, Ctrl+Shift+I, Ctrl+Shift+J)
+        document.addEventListener('keydown', (e) => {
+            if (
+                (e.key === 'F12') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') || // Ctrl+Shift+I
+                (e.ctrlKey && e.shiftKey && e.key === 'J')    // Ctrl+Shift+J (for console)
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable right-click on the body
+        document.body.oncontextmenu = () => false;
     </script>
 
 </body>
