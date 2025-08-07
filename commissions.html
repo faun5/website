@@ -143,6 +143,110 @@
             padding-bottom: 0;
             margin-bottom: 0;
         }
+
+        /* TOS Modal Styles */
+        .tos-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .tos-modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .tos-modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            width: 90%; /* Responsive width */
+            max-height: 80vh; /* Max height to allow scrolling */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .tos-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .tos-modal-close:hover {
+            color: #ec4899; /* Pink-500 */
+        }
+        .tos-text-container {
+            flex-grow: 1; /* Allows text to take available space */
+            overflow-y: auto; /* Makes the text content scrollable */
+            padding-right: 1rem; /* Space for scrollbar */
+            margin-bottom: 1.5rem; /* Space before the button */
+            max-height: 60vh; /* Adjust this value if needed, e.g., 50vh, 70vh */
+        }
+        .tos-text-container h4 {
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .tos-text-container ul {
+            list-style: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .tos-text-container li {
+            margin-bottom: 0.25rem;
+        }
+
+        .tos-read-button {
+            background-color: #d1d5db; /* Default gray */
+            color: #374151; /* Default gray text */
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: not-allowed; /* Initially disabled */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            user-select: none; /* Prevent text selection */
+        }
+        /* Style for when the button is enabled (scrolled to bottom but not yet clicked) */
+        .tos-read-button:not([disabled]) {
+            background-color: #ec4899; /* Pink-500 */
+            color: white;
+            cursor: pointer; /* Change cursor to pointer when enabled */
+        }
+        /* Style for after the button has been clicked */
+        .tos-read-button.agreed {
+            background-color: #ec4899; /* Stays pink */
+            color: white;
+            cursor: default; /* Change cursor after clicked */
+        }
+
+        /* New style for the screenshot message container */
+        .tos-screenshot-message {
+            display: none; /* Hidden by default */
+            text-align: center;
+            font-size: 1.25rem;
+            color: #333;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .tos-screenshot-message.active {
+            display: block; /* Show when active */
+        }
     </style>
 </head>
 <body class="text-gray-800" oncontextmenu="return false;"> <!-- Added to disable right-click -->
@@ -312,8 +416,8 @@
             <div class="mt-8 text-center">
                 <h4 class="text-xl font-bold text-pink-600 mb-2">Terms of Service (TOS) & Process</h4>
                 <p class="text-gray-700 mb-4">
-                    Please read my full <a href="#" class="text-pink-500 hover:underline">Terms of Service</a> before commissioning.
-                    PayPal only. I require 100% payment upfront for all commissions. Revisions are limited to sketches and flat colors.
+                    Please read my full <a href="#" id="open-tos-modal" class="text-pink-500 hover:underline cursor-pointer">Terms of Service</a> before commissioning.
+                    I require 100% payment upfront for all commissions. Revisions are limited to sketches and flat colors.
                 </p>
                 <a href="contact" class="inline-block bg-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-pink-600 transition duration-300 shadow-md">
                     Inquire About a Commission
@@ -326,6 +430,67 @@
     <footer class="bg-rose-400 text-white p-6 text-center mt-12 rounded-t-lg">
         <p>&copy; 2025 faun5. All rights reserved.</p>
     </footer>
+
+    <!-- TOS Modal Overlay -->
+    <div id="tos-modal-overlay" class="tos-modal-overlay">
+        <div class="tos-modal-content">
+            <button id="tos-modal-close" class="tos-modal-close">&times;</button>
+            <h3 id="tos-modal-title" class="text-2xl font-bold text-center text-pink-600 mb-4">Terms of Service</h3>
+            
+            <!-- Original TOS Content -->
+            <div id="tos-original-content">
+                <div class="tos-text-container">
+                    <p class="mb-4">By commissioning me (the artist) for digital artwork, you (the client) agree to the following terms and conditions.</p>
+
+                    <h4>PAYMENT AND PRICING</h4>
+                    <ul>
+                        <li>All prices are listed in USD.</li>
+                        <li>Payments are accepted via PayPal only.</li>
+                        <li>Payment is required upfront before any work will be started.</li>
+                        <li>If, for any reason, I am unable to complete the commission, a full refund will be issued.</li>
+                    </ul>
+
+                    <h4>ARTWORK</h4>
+                    <ul>
+                        <li>I reserve the right to decline any commission request for any reason.</li>
+                        <li>I will not create any artwork that includes NSFW or fetish themes.</li>
+                        <li>The client is responsible for providing a clear and detailed description of what they want in their commission.</li>
+                        <li>I will provide the client with a sketch and line-art for approval before proceeding to the final stage of the commission.</li>
+                        <li>The client will be allowed one round of minor revisions after the sketch/line-art is approved. Major revisions will be subject to additional fees.</li>
+                    </ul>
+
+                    <h4>COPYRIGHT AND USAGE</h4>
+                    <ul>
+                        <li>The artist retains full copyright of the artwork.</li>
+                        <li>The client is allowed to use the artwork for personal use only, unless commercial usage has been discussed and agreed upon with the artist.</li>
+                        <li>The artist retains the right to use the artwork for self-promotion and advertising purposes, unless otherwise discussed with the client.</li>
+                        <li>You are not to use any form of artificial intelligence or machine learning technology to create reproductions or derivative works of my artwork, whether finished or unfinished, without my express written permission (will most likely say no). I value the uniqueness and originality of my artwork, and I do not wish to have my creations duplicated or altered in a way that diminishes their authenticity. Therefore, any unauthorized use of AI-generated versions of my artwork will be considered a violation of my intellectual property rights and may result in legal action.</li>
+                    </ul>
+
+                    <h4>ADDITIONAL TERMS</h4>
+                    <ul>
+                        <li>The prices listed on the artist's website or commission sheet are subject to change at any time without notice.</li>
+                        <li>The artist reserves the right to charge additional fees for rush orders or complex designs.</li>
+                        <li>If the client cancels the commission before work has begun, a full refund will be issued. If the client cancels after work has begun, a partial refund may be issued at the artist's discretion.</li>
+                        <li>If the client fails to pay the full amount for the commission within one week of the sketch being sent, the commission will be cancelled.</li>
+                        <li>The client may not make any alterations to the artwork without the artist's consent.</li>
+                        <li>The artist retains the right to decline any request for revisions that would significantly alter the original design or require additional work beyond the scope of the initial agreement.</li>
+                        <li>The client may not reproduce or distribute the artwork for commercial purposes without the artist's written consent.</li>
+                        <li>If the artwork is to be used for commercial purposes, the artist and client will agree upon appropriate compensation and usage rights.</li>
+                        <li>The client may not claim ownership of the artwork or use it for any purpose beyond the terms of the commission without the artist's written consent.</li>
+                        <li>The client agrees to indemnify and hold harmless the artist against any claims or liabilities arising from the client's use of the artwork.</li>
+                    </ul>
+                </div>
+                <button id="tos-read-button" class="tos-read-button" disabled>I have read and agree to the Terms of Service.</button>
+            </div>
+
+            <!-- Screenshot Message Content (initially hidden) -->
+            <div id="tos-screenshot-content" class="tos-screenshot-message">
+                <p class="text-2xl font-bold text-pink-600 mb-4">Awesome!</p>
+                <p class="text-xl text-gray-700">Screenshot this page and send it to the artist to verify that you've read it and we can continue your commission!</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Array to hold the current slide index for each slideshow
@@ -351,6 +516,96 @@
                 // Show the first slide for each slideshow
                 showSlides(1, index);
             });
+
+            // TOS Modal Logic
+            const openTosModalBtn = document.getElementById('open-tos-modal');
+            const tosModalOverlay = document.getElementById('tos-modal-overlay');
+            const tosModalCloseBtn = document.getElementById('tos-modal-close');
+            const tosReadButton = document.getElementById('tos-read-button');
+            const tosTextContainer = document.querySelector('#tos-original-content .tos-text-container');
+            const tosOriginalContent = document.getElementById('tos-original-content');
+            const tosScreenshotContent = document.getElementById('tos-screenshot-content');
+            const tosModalTitle = document.getElementById('tos-modal-title');
+
+
+            // Function to reset modal to initial state
+            function resetTosModal() {
+                tosOriginalContent.style.display = 'block';
+                tosScreenshotContent.style.display = 'none';
+                tosReadButton.classList.remove('agreed');
+                tosReadButton.textContent = 'I have read and agree to the Terms of Service.';
+                tosReadButton.disabled = true; // Disable until scrolled
+                tosModalTitle.textContent = 'Terms of Service'; // Reset title
+                // Reset button background and text color to default gray
+                tosReadButton.style.backgroundColor = '#d1d5db'; /* Gray-300 */
+                tosReadButton.style.color = '#374151'; /* Gray-700 */
+                if (tosTextContainer) {
+                    tosTextContainer.scrollTop = 0; // Scroll to top when opening
+                }
+            }
+
+            if (openTosModalBtn) {
+                openTosModalBtn.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent default link behavior
+                    resetTosModal(); // Reset state before opening
+                    tosModalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                });
+            }
+
+            if (tosModalCloseBtn) {
+                tosModalCloseBtn.addEventListener('click', () => {
+                    tosModalOverlay.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore background scrolling
+                });
+            }
+
+            // Close modal if clicking outside the content
+            if (tosModalOverlay) {
+                tosModalOverlay.addEventListener('click', (e) => {
+                    if (e.target === tosModalOverlay) {
+                        tosModalOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
+            // Enable button when scrolled to bottom
+            if (tosTextContainer) {
+                tosTextContainer.addEventListener('scroll', () => {
+                    // Check if scrolled to the very bottom
+                    if (tosTextContainer.scrollTop + tosTextContainer.clientHeight >= tosTextContainer.scrollHeight - 5) { // -5 for a small buffer
+                        tosReadButton.disabled = false;
+                        // The CSS rule `:not([disabled])` will handle the pink color, but we can explicitly set it here too if needed
+                        tosReadButton.style.backgroundColor = '#ec4899'; /* Pink-500 */
+                        tosReadButton.style.color = 'white';
+                    } else {
+                        tosReadButton.disabled = true;
+                        // Reset button background and text color to default gray
+                        tosReadButton.style.backgroundColor = '#d1d5db'; /* Gray-300 */
+                        tosReadButton.style.color = '#374151'; /* Gray-700 */
+                    }
+                });
+            }
+
+            if (tosReadButton) {
+                tosReadButton.addEventListener('click', () => {
+                    if (!tosReadButton.disabled) { // Only proceed if button is enabled
+                        tosReadButton.classList.add('agreed');
+                        tosReadButton.textContent = 'Awesome! Screenshot this page and send it to the artist so that I know you read it!';
+                        tosReadButton.disabled = true; // Disable button after first click
+                        tosReadButton.style.cursor = 'default'; // Change cursor after clicked
+
+                        // Hide original content and show screenshot message
+                        tosOriginalContent.style.display = 'none';
+                        tosScreenshotContent.style.display = 'block';
+                        tosModalTitle.textContent = 'Terms Acknowledged!'; // Update modal title
+
+                        // The button will stay pink because of the .agreed class and the explicit style set on scroll
+                        // No need for a setTimeout to change to "Okay!" as the instruction is to screenshot this specific state.
+                    }
+                });
+            }
         });
 
         // Next/previous controls for a specific slideshow
