@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-initial-scale=1.0">
+    <title>faun5 - Commissions</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social icons and arrows -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light background similar to the image */
+        }
+        /* Custom styles for the colorful dots (now pastel pink-toned) */
+        .color-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .dot-pastel-pink-1 { background-color: #fbcfe8; } /* Tailwind pink-300 */
+        .dot-pastel-pink-2 { background-color: #fecdd3; } /* Tailwind rose-200 */
+        .dot-pastel-purple { background-color: #e9d5ff; } /* Tailwind purple-200 */
+        .dot-pastel-fuchsia { background-color: #f5d0fe; } /* Tailwind fuchsia-200 */
+
+        /* Carousel specific styles */
+        .carousel-container {
+            position: relative;
+            max-width: 600px; /* Adjusted max-width for individual YCH carousels */
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+        }
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain; /* Ensure full image is visible */
+            max-height: 400px; /* Adjusted max-height for carousel consistency */
+        }
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.75rem 1rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease;
+            z-index: 10;
+        }
+        .carousel-button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .carousel-button.prev {
+            left: 1rem;
+        }
+        .carousel-button.next {
+            right: 1rem;
+        }
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-dot.active {
+            background-color: #ec4899; /* Tailwind pink-500 */
+        }
+
+        /* Commission Sheet styles */
+        .commission-sheet-section {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+        .commission-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        .commission-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body class="text-gray-800" oncontextmenu="return false;"> <!-- Added to disable right-click -->
+
+    <!-- Header Section -->
+    <header class="bg-white p-4 md:p-6 shadow-sm">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <!-- Logo and Colorful Dots -->
+            <div class="flex items-center mb-4 md:mb-0">
+                <h1 class="text-2xl font-bold mr-2">faun5</h1>
+                <div class="flex">
+                    <span class="color-dot dot-pastel-pink-1"></span>
+                    <span class="color-dot dot-pastel-pink-2"></span>
+                    <span class="color-dot dot-pastel-purple"></span>
+                    <span class="color-dot dot-pastel-fuchsia"></span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4 mb-4 md:mb-0">
+                <a href="index.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
+                <a href="gallery.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
+                <a href="commissions.html" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">COMMISSIONS</a>
+                <a href="about.html" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
+                <a href="contact.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">CONTACT</a>
+            </nav>
+
+            <!-- Social Media Icons -->
+            <div class="flex gap-4 text-xl">
+                <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fab fa-tumblr"></i></a>
+                <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-center my-8">Commissions</h2>
+
+        <!-- YCHs Section -->
+        <section class="mb-12">
+            <h3 class="text-2xl md:text-3xl font-semibold text-center mb-6">Your Character Here (YCHs)</h3>
+            <p class="text-center text-gray-600 mb-8">
+                YCHs are pre-made poses or scenes where I draw your character! Limited slots available.
+            </p>
+
+            <!-- YCH 1 -->
+            <div class="mb-12 p-6 bg-white rounded-xl shadow-lg">
+                <h4 class="text-xl md:text-2xl font-bold text-pink-600 mb-2 text-center">Head Pat YCH</h4>
+                <p class="text-lg text-gray-700 mb-4 text-center">Price: <span class="font-bold text-pink-700">$10</span></p>
+                <div class="carousel-container" id="ych1-carousel-container">
+                    <div class="carousel-slides" id="ych1-carousel-slides">
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/commissions/cyan.png" alt="Cyan" draggable="false">
+                        </div>
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/commissions/atlas.png" alt="Atlas" draggable="false">
+                        </div>
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/commissions/pelagici.png" alt="Pelagici" draggable="false">
+                        </div>
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/commissions/findus.png" alt="Findus" draggable="false">
+                        </div>                        
+                    </div>
+                    <button class="carousel-button prev" id="ych1-carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-button next" id="ych1-carousel-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="carousel-dots" id="ych1-carousel-dots"></div>
+            </div>
+
+            <!-- YCH 2 -->
+            <div class="mb-12 p-6 bg-white rounded-xl shadow-lg">
+                <h4 class="text-xl md:text-2xl font-bold text-pink-600 mb-2 text-center">LPSify YCH</h4>
+                <p class="text-lg text-gray-700 mb-4 text-center">Price: <span class="font-bold text-pink-700">$15</span></p>
+                <div class="carousel-container" id="ych2-carousel-container">
+                    <div class="carousel-slides" id="ych2-carousel-slides">
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/illustration/chocemi lps.png" alt="YCH 2 Example A" draggable="false">
+                        </div>
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/illustration/fresa lps.png" alt="YCH 2 Example B" draggable="false">
+                        </div>
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/illustration/phyllo lps.png" alt="YCH 2 Example B" draggable="false">
+                        </div>
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/illustration/remmi lps.png" alt="YCH 2 Example B" draggable="false">
+                        </div>
+                        <div class="carousel-slide">
+                            <!-- Replace src with your actual image path -->
+                            <img src="/images/illustration/viper lps.png" alt="YCH 2 Example B" draggable="false">
+                        </div>
+                    </div>
+                    <button class="carousel-button prev" id="ych2-carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-button next" id="ych2-carousel-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="carousel-dots" id="ych2-carousel-dots"></div>
+            </div>
+
+            <!-- Add more YCHs here following the same structure -->
+
+        </section>
+
+        <hr class="my-12 border-t-2 border-rose-200">
+
+        <!-- Regular Commission Sheet Section -->
+        <section class="commission-sheet-section">
+            <h3 class="text-2xl md:text-3xl font-semibold text-center mb-6">Regular Commissions</h3>
+            <p class="text-center text-gray-600 mb-8">
+                Here you'll find my general commission prices and offerings. Prices are starting rates and may vary based on complexity.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Commission Type 1 -->
+                <div class="commission-item">
+                    <h4 class="text-xl font-bold text-pink-600 mb-2">Bust/Headshot</h4>
+                    <p class="text-gray-700 mb-2">A detailed drawing from the chest up.</p>
+                    <ul class="list-disc list-inside text-gray-600">
+                        <li>Flat Color: $XX</li>
+                        <li>Shaded: $YY</li>
+                    </ul>
+                    <p class="text-sm text-gray-500 mt-2">Add complex background: +$ZZ</p>
+                </div>
+
+                <!-- Commission Type 2 -->
+                <div class="commission-item">
+                    <h4 class="text-xl font-bold text-pink-600 mb-2">Half Body</h4>
+                    <p class="text-gray-700 mb-2">A drawing from the waist up, including hands.</p>
+                    <ul class="list-disc list-inside text-gray-600">
+                        <li>Flat Color: $AA</li>
+                        <li>Shaded: $BB</li>
+                    </ul>
+                    <p class="text-sm text-gray-500 mt-2">Additional character: +80% of base price</p>
+                </div>
+
+                <!-- Commission Type 3 -->
+                <div class="commission-item">
+                    <h4 class="text-xl font-bold text-pink-600 mb-2">Full Body</h4>
+                    <p class="text-gray-700 mb-2">A complete drawing of your character from head to toe.</p>
+                    <ul class="list-disc list-inside text-gray-600">
+                        <li>Flat Color: $CC</li>
+                        <li>Shaded: $DD</li>
+                    </ul>
+                    <p class="text-sm text-gray-500 mt-2">Simple background included. Complex background: +$10</p>
+                </div>
+
+                <!-- Commission Type 4 -->
+                <div class="commission-item">
+                    <h4 class="text-xl font-bold text-pink-600 mb-2">Custom Designs</h4>
+                    <p class="text-gray-700 mb-2">Bring your unique ideas to life! Prices vary greatly.</p>
+                    <ul class="list-disc list-inside text-gray-600">
+                        <li>Starting from: $40</li>
+                    </ul>
+                    <p class="text-sm text-gray-500 mt-2">Contact me for a detailed quote.</p>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <h4 class="text-xl font-bold text-pink-600 mb-2">Terms of Service (TOS) & Process</h4>
+                <p class="text-gray-700 mb-4">
+                    Please read my full <a href="#" class="text-pink-500 hover:underline">Terms of Service</a> before commissioning.
+                    PayPal only. I require 100% payment upfront for all commissions. Revisions are limited to sketches and flat colors.
+                </p>
+                <a href="contact.html" class="inline-block bg-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-pink-600 transition duration-300 shadow-md">
+                    Inquire About a Commission
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-rose-400 text-white p-6 text-center mt-12 rounded-t-lg">
+        <p>&copy; 2025 faun5. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Generic Carousel Logic for multiple instances
+        class Carousel {
+            constructor(containerId) {
+                this.slidesContainer = document.getElementById(containerId);
+                if (!this.slidesContainer) {
+                    console.error(`Carousel container with ID ${containerId} not found.`);
+                    return;
+                }
+                this.slides = this.slidesContainer.querySelectorAll('.carousel-slide');
+                this.prevButton = document.getElementById(containerId.replace('slides', 'prev'));
+                this.nextButton = document.getElementById(containerId.replace('slides', 'next'));
+                this.dotsContainer = document.getElementById(containerId.replace('slides', 'dots'));
+                this.currentIndex = 0;
+
+                this.init();
+            }
+
+            init() {
+                if (!this.slides.length) return; // No slides to show
+
+                this.updateCarousel();
+                this.prevButton.addEventListener('click', () => this.navigate(-1));
+                this.nextButton.addEventListener('click', () => this.navigate(1));
+            }
+
+            updateCarousel() {
+                this.slidesContainer.style.transform = `translateX(${-this.currentIndex * 100}%)`;
+                this.updateDots();
+            }
+
+            updateDots() {
+                this.dotsContainer.innerHTML = '';
+                this.slides.forEach((_, index) => {
+                    const dot = document.createElement('span');
+                    dot.classList.add('carousel-dot');
+                    if (index === this.currentIndex) {
+                        dot.classList.add('active');
+                    }
+                    dot.addEventListener('click', () => {
+                        this.currentIndex = index;
+                        this.updateCarousel();
+                    });
+                    this.dotsContainer.appendChild(dot);
+                });
+            }
+
+            navigate(direction) {
+                this.currentIndex = (this.currentIndex + direction + this.slides.length) % this.slides.length;
+                this.updateCarousel();
+            }
+        }
+
+        // Initialize all carousels on the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Find all carousel slide containers by their IDs
+            const ychCarouselIds = [
+                'ych1-carousel-slides',
+                'ych2-carousel-slides',
+                // Add IDs for more YCH carousels here
+            ];
+
+            ychCarouselIds.forEach(id => {
+                new Carousel(id);
+            });
+        });
+
+        // Disable Inspect Element (F12, Ctrl+Shift+I, Ctrl+Shift+J)
+        document.addEventListener('keydown', (e) => {
+            if (
+                (e.key === 'F12') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') || // Ctrl+Shift+I
+                (e.ctrlKey && e.shiftKey && e.key === 'J')    // Ctrl+Shift+J (for console)
+            ) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+</html>

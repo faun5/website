@@ -203,13 +203,66 @@
                 grid-column: span 2;
             }
         }
+
+        /* Mobile Nav Specific Styles */
+        /* This ensures the mobile menu is full width and stacked vertically */
+        .mobile-nav-menu {
+            display: none; /* Hidden by default on all screens */
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 1rem;
+            background-color: #fff; /* Match header background */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1rem 0;
+        }
+
+        .mobile-nav-menu.active {
+            display: flex; /* Show when active */
+        }
+
+        .mobile-nav-menu a {
+            width: calc(100% - 2rem); /* Full width with padding */
+            text-align: center;
+            padding: 0.75rem 0;
+            margin-bottom: 0.5rem; /* Space between links */
+            border-radius: 0.5rem;
+        }
+
+        .mobile-nav-menu a:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Hide regular nav and show hamburger on small screens */
+        @media (max-width: 767px) { /* Below md breakpoint */
+            .main-nav {
+                display: none; /* Hide desktop nav */
+            }
+            .hamburger-button {
+                display: block; /* Show hamburger button */
+            }
+        }
+
+        /* Show regular nav and hide hamburger on medium screens and up */
+        @media (min-width: 768px) { /* md breakpoint and up */
+            .main-nav {
+                display: flex !important; /* Ensure desktop nav is visible */
+            }
+            .hamburger-button {
+                display: none; /* Hide hamburger button */
+            }
+            .mobile-nav-menu {
+                display: none !important; /* Hide mobile menu when desktop nav is active */
+            }
+        }
     </style>
 </head>
 <body class="text-gray-800">
 
     <!-- Header Section -->
     <header class="bg-white p-4 md:p-6 shadow-sm">
-        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between relative">
             <!-- Logo and Colorful Dots -->
             <div class="flex items-center mb-4 md:mb-0">
                 <h1 class="text-2xl font-bold mr-2">faun5</h1>
@@ -221,22 +274,37 @@
                 </div>
             </div>
 
-            <!-- Navigation Links -->
-            <nav class="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4 mb-4 md:mb-0">
-                <a href="index" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
-                <a href="gallery" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">GALLERY</a>
-                <a href="about" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
-                <a href="contact" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">CONTACT</a>
+            <!-- Hamburger Menu Button (visible on small screens) -->
+            <button id="hamburger-button" class="hamburger-button text-gray-600 text-3xl absolute top-4 right-4 md:hidden">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Desktop Navigation Links (hidden on small screens) -->
+            <nav class="main-nav flex flex-wrap justify-center md:justify-start gap-2 md:gap-4 mb-4 md:mb-0">
+                <a href="index.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
+                <a href="gallery.html" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">GALLERY</a>
+                <a href="commissions.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">COMMISSIONS</a>
+                <a href="about.html" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
+                <a href="contact.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">CONTACT</a>
             </nav>
 
-            <!-- Social Media Icons -->
-            <div class="flex gap-4 text-xl">
+            <!-- Social Media Icons (adjust positioning for mobile if needed) -->
+            <div class="flex gap-4 text-xl md:flex">
                 <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fab fa-tumblr"></i></a>
                 <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="text-gray-600 hover:text-pink-600 transition duration-300"><i class="fas fa-envelope"></i></a>
             </div>
         </div>
+
+        <!-- Mobile Navigation Menu (hidden by default, toggled by JS) -->
+        <nav id="mobile-nav-menu" class="mobile-nav-menu">
+            <a href="index.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">HOME</a>
+            <a href="gallery.html" class="bg-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-600 transition duration-300">GALLERY</a>
+            <a href="commissions.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">COMMISSIONS</a>
+            <a href="about.html" class="bg-rose-200 text-white px-4 py-2 rounded-lg font-medium hover:bg-rose-300 transition duration-300">ABOUT</a>
+            <a href="contact.html" class="bg-pink-300 text-white px-4 py-2 rounded-lg font-medium hover:bg-pink-400 transition duration-300">CONTACT</a>
+        </nav>
     </header>
 
     <!-- Main Content - Gallery Section -->
@@ -588,6 +656,28 @@
                     }
                 }
             });
+
+            // --- Hamburger Menu Logic ---
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+            if (hamburgerButton && mobileNavMenu) {
+                hamburgerButton.addEventListener('click', () => {
+                    mobileNavMenu.classList.toggle('active');
+                });
+            } else {
+                console.error("Hamburger elements not found. Mobile menu functionality might be impaired.");
+            }
+
+            // Close mobile menu if window is resized to desktop size
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) { // md breakpoint
+                    if (mobileNavMenu && mobileNavMenu.classList.contains('active')) {
+                        mobileNavMenu.classList.remove('active');
+                    }
+                }
+            });
+
 
             // --- Initial Data Load and Gallery Render ---
             async function loadArtworkData() {
