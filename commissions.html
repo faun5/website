@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>faun5 - Commissions</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,74 +28,102 @@
         .dot-pastel-purple { background-color: #e9d5ff; } /* Tailwind purple-200 */
         .dot-pastel-fuchsia { background-color: #f5d0fe; } /* Tailwind fuchsia-200 */
 
-        /* Carousel specific styles */
-        .carousel-container {
+        /* Slideshow container */
+        .slideshow-container {
+            max-width: 600px; /* Adjusted to fit your YCH sections */
             position: relative;
-            max-width: 600px; /* Adjusted max-width for individual YCH carousels */
             margin: 0 auto;
-            overflow: hidden;
             border-radius: 0.75rem; /* rounded-xl */
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            overflow: hidden; /* Ensure images don't spill out */
         }
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            touch-action: pan-y; /* Allow vertical scrolling, prevent horizontal default */
+
+        /* Hide the images by default */
+        .mySlides {
+            display: none;
         }
-        .carousel-slide {
-            min-width: 100%;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0; /* Prevent shrinking */
-        }
-        .carousel-slide img {
+        .mySlides img {
             width: 100%;
             height: auto;
             display: block;
-            object-fit: contain; /* Ensure full image is visible */
-            max-height: 400px; /* Adjusted max-height for carousel consistency */
+            object-fit: contain;
+            max-height: 400px; /* Consistent height for slideshows */
         }
-        .carousel-button {
+
+        /* Next & previous buttons */
+        .prev, .next {
+            cursor: pointer;
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
+            transform: translateY(-50%); /* Center vertically */
+            width: auto;
+            padding: 16px;
             color: white;
-            padding: 0.75rem 1rem;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.3s ease;
+            font-weight: bold;
+            font-size: 1.5rem; /* Larger for better mobile touch */
+            transition: 0.6s ease;
+            border-radius: 0.5rem; /* Rounded corners */
+            user-select: none;
+            background-color: rgba(0,0,0,0.5); /* Semi-transparent background */
             z-index: 10;
         }
-        .carousel-button:hover {
-            background-color: rgba(0, 0, 0, 0.7);
+
+        /* Position the "next button" to the right */
+        .next {
+            right: 1rem; /* Consistent with previous carousel */
+            border-radius: 0.5rem; /* Ensure consistent rounding */
         }
-        .carousel-button.prev {
-            left: 1rem;
+
+        /* On hover, add a black background color with a little bit see-through */
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
         }
-        .carousel-button.next {
-            right: 1rem;
+
+        /* Caption text (not used in your current YCH structure, but kept for reference) */
+        .text {
+            color: #f2f2f2;
+            font-size: 15px;
+            padding: 8px 12px;
+            position: absolute;
+            bottom: 8px;
+            width: 100%;
+            text-align: center;
         }
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            margin-top: 1rem;
+
+        /* Number text (1/3 etc) (not used in your current YCH structure, but kept for reference) */
+        .numbertext {
+            color: #f2f2f2;
+            font-size: 12px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
         }
-        .carousel-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #ccc;
-            margin: 0 5px;
+
+        /* The dots/bullets/indicators */
+        .dot {
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            height: 10px; /* Smaller dots */
+            width: 10px;
+            margin: 0 5px; /* Consistent spacing */
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
         }
-        .carousel-dot.active {
-            background-color: #ec4899; /* Tailwind pink-500 */
+
+        .active-dot, .dot:hover {
+            background-color: #ec4899; /* Tailwind pink-500 for active/hover */
+        }
+
+        /* Fading animation */
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
         }
 
         /* Commission Sheet styles */
@@ -163,66 +191,64 @@
                 YCHs are pre-made poses or scenes where I draw your character! Limited slots available.
             </p>
 
-            <!-- YCH 1 -->
+            <!-- YCH 1 Slideshow -->
             <div class="mb-12 p-6 bg-white rounded-xl shadow-lg">
                 <h4 class="text-xl md:text-2xl font-bold text-pink-600 mb-2 text-center">Head Pat YCH</h4>
                 <p class="text-lg text-gray-700 mb-4 text-center">Price: <span class="font-bold text-pink-700">$10</span></p>
-                <div class="carousel-container" id="ych1-carousel-container">
-                    <div class="carousel-slides" id="ych1-carousel-slides">
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/commissions/cyan.png" alt="Cyan" draggable="false">
-                        </div>
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/commissions/atlas.png" alt="Atlas" draggable="false">
-                        </div>
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/commissions/pelagici.png" alt="Pelagici" draggable="false">
-                        </div>
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/commissions/findus.png" alt="Findus" draggable="false">
-                        </div>
+                <div class="slideshow-container">
+                    <div class="mySlides1 fade">
+                        <img src="/images/commissions/cyan.png" alt="Cyan" draggable="false">
                     </div>
-                    <button class="carousel-button prev" id="ych1-carousel-prev"><i class="fas fa-chevron-left"></i></button>
-                    <button class="carousel-button next" id="ych1-carousel-next"><i class="fas fa-chevron-right"></i></button>
+                    <div class="mySlides1 fade">
+                        <img src="/images/commissions/atlas.png" alt="Atlas" draggable="false">
+                    </div>
+                    <div class="mySlides1 fade">
+                        <img src="/images/commissions/pelagici.png" alt="Pelagici" draggable="false">
+                    </div>
+                    <div class="mySlides1 fade">
+                        <img src="/images/commissions/findus.png" alt="Findus" draggable="false">
+                    </div>
+                    <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
                 </div>
-                <div class="carousel-dots" id="ych1-carousel-dots"></div>
+                <div style="text-align:center; margin-top: 1rem;">
+                    <span class="dot" onclick="currentSlide(1, 0)"></span>
+                    <span class="dot" onclick="currentSlide(2, 0)"></span>
+                    <span class="dot" onclick="currentSlide(3, 0)"></span>
+                    <span class="dot" onclick="currentSlide(4, 0)"></span>
+                </div>
             </div>
 
-            <!-- YCH 2 -->
+            <!-- YCH 2 Slideshow -->
             <div class="mb-12 p-6 bg-white rounded-xl shadow-lg">
                 <h4 class="text-xl md:text-2xl font-bold text-pink-600 mb-2 text-center">LPSify YCH</h4>
                 <p class="text-lg text-gray-700 mb-4 text-center">Price: <span class="font-bold text-pink-700">$15</span></p>
-                <div class="carousel-container" id="ych2-carousel-container">
-                    <div class="carousel-slides" id="ych2-carousel-slides">
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/illustration/chocemi lps.png" alt="YCH 2 Example A" draggable="false">
-                        </div>
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/illustration/fresa lps.png" alt="YCH 2 Example B" draggable="false">
-                        </div>
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/illustration/phyllo lps.png" alt="YCH 2 Example B" draggable="false">
-                        </div>
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/illustration/remmi lps.png" alt="YCH 2 Example B" draggable="false">
-                        </div>
-                        <div class="carousel-slide">
-                            <!-- Replace src with your actual image path -->
-                            <img src="/images/illustration/viper lps.png" alt="YCH 2 Example B" draggable="false">
-                        </div>
+                <div class="slideshow-container">
+                    <div class="mySlides2 fade">
+                        <img src="/images/illustration/chocemi lps.png" alt="Chocemi LPS" draggable="false">
                     </div>
-                    <button class="carousel-button prev" id="ych2-carousel-prev"><i class="fas fa-chevron-left"></i></button>
-                    <button class="carousel-button next" id="ych2-carousel-next"><i class="fas fa-chevron-right"></i></button>
+                    <div class="mySlides2 fade">
+                        <img src="/images/illustration/fresa lps.png" alt="Fresa LPS" draggable="false">
+                    </div>
+                    <div class="mySlides2 fade">
+                        <img src="/images/illustration/phyllo lps.png" alt="Phyllo LPS" draggable="false">
+                    </div>
+                    <div class="mySlides2 fade">
+                        <img src="/images/illustration/remmi lps.png" alt="Remmi LPS" draggable="false">
+                    </div>
+                    <div class="mySlides2 fade">
+                        <img src="/images/illustration/viper lps.png" alt="Viper LPS" draggable="false">
+                    </div>
+                    <a class="prev" onclick="plusSlides(-1, 1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
                 </div>
-                <div class="carousel-dots" id="ych2-carousel-dots"></div>
+                <div style="text-align:center; margin-top: 1rem;">
+                    <span class="dot" onclick="currentSlide(1, 1)"></span>
+                    <span class="dot" onclick="currentSlide(2, 1)"></span>
+                    <span class="dot" onclick="currentSlide(3, 1)"></span>
+                    <span class="dot" onclick="currentSlide(4, 1)"></span>
+                    <span class="dot" onclick="currentSlide(5, 1)"></span>
+                </div>
             </div>
 
             <!-- Add more YCHs here following the same structure -->
@@ -302,131 +328,75 @@
     </footer>
 
     <script>
-        // Generic Carousel Logic for multiple instances
-        class Carousel {
-            constructor(containerId) {
-                this.slidesContainer = document.getElementById(containerId);
-                if (!this.slidesContainer) {
-                    console.error(`Carousel container with ID ${containerId} not found.`);
-                    return;
-                }
-                this.slides = this.slidesContainer.querySelectorAll('.carousel-slide');
-                this.prevButton = document.getElementById(containerId.replace('slides', 'prev'));
-                this.nextButton = document.getElementById(containerId.replace('slides', 'next'));
-                this.dotsContainer = document.getElementById(containerId.replace('slides', 'dots'));
-                this.currentIndex = 0;
+        // Array to hold the current slide index for each slideshow
+        let slideIndex = [];
+        // Array to hold the CSS class names for each slideshow's slides
+        let slideId = [];
 
-                this.startX = 0;
-                this.endX = 0;
-
-                this.init();
-            }
-
-            async init() { // Made init async
-                if (!this.slides.length) return; // No slides to show
-
-                await this.loadCurrentSlideImages(); // Wait for images to load
-                this.updateCarousel();
-                this.prevButton.addEventListener('click', () => this.navigate(-1));
-                this.nextButton.addEventListener('click', () => this.navigate(1));
-
-                // Add touch event listeners for mobile swiping
-                this.slidesContainer.addEventListener('touchstart', this.handleTouchStart.bind(this));
-                this.slidesContainer.addEventListener('touchmove', this.handleTouchMove.bind(this));
-                this.slidesContainer.addEventListener('touchend', this.handleTouchEnd.bind(this));
-            }
-
-            async loadCurrentSlideImages() { // New method to load images in current slide
-                const currentSlide = this.slides[this.currentIndex];
-                const images = currentSlide.querySelectorAll('img');
-                const imageLoadPromises = Array.from(images).map(img => {
-                    return new Promise(resolve => {
-                        if (img.complete) {
-                            resolve();
-                        } else {
-                            img.onload = resolve;
-                            img.onerror = resolve; // Resolve even on error to not block
-                        }
-                    });
-                });
-                await Promise.all(imageLoadPromises);
-            }
-
-            updateCarousel() {
-                this.slidesContainer.style.transform = `translateX(${-this.currentIndex * 100}%)`;
-                this.updateDots();
-            }
-
-            updateDots() {
-                this.dotsContainer.innerHTML = '';
-                this.slides.forEach((_, index) => {
-                    const dot = document.createElement('span');
-                    dot.classList.add('carousel-dot');
-                    if (index === this.currentIndex) {
-                        dot.classList.add('active');
-                    }
-                    dot.addEventListener('click', async () => { // Made dot click async
-                        this.currentIndex = index;
-                        await this.loadCurrentSlideImages(); // Wait for images to load
-                        this.updateCarousel();
-                    });
-                    this.dotsContainer.appendChild(dot);
-                });
-            }
-
-            async navigate(direction) { // Made navigate async
-                this.currentIndex = (this.currentIndex + direction + this.slides.length) % this.slides.length;
-                await this.loadCurrentSlideImages(); // Wait for images to load
-                this.updateCarousel();
-            }
-
-            handleTouchStart(e) {
-                this.startX = e.touches[0].clientX;
-                // Temporarily disable transition for smoother dragging
-                this.slidesContainer.style.transition = 'none';
-            }
-
-            handleTouchMove(e) {
-                this.endX = e.touches[0].clientX;
-                const diff = this.startX - this.endX;
-                // Move the slides as the user drags
-                this.slidesContainer.style.transform = `translateX(${-this.currentIndex * 100 - (diff / this.slidesContainer.offsetWidth) * 100}%)`;
-            }
-
-            async handleTouchEnd() { // Made handleTouchEnd async
-                // Re-enable transition
-                this.slidesContainer.style.transition = 'transform 0.5s ease-in-out';
-
-                const threshold = 50; // Minimum swipe distance to trigger navigation
-                const diff = this.startX - this.endX;
-
-                if (diff > threshold) {
-                    await this.navigate(1); // Swipe left (next)
-                } else if (diff < -threshold) {
-                    await this.navigate(-1); // Swipe right (prev)
-                } else {
-                    // If not a significant swipe, return to current slide
-                    await this.loadCurrentSlideImages(); // Ensure current slide images are loaded before snapping back
-                    this.updateCarousel();
-                }
-                this.startX = 0;
-                this.endX = 0;
-            }
-        }
-
-        // Initialize all carousels on the page
         document.addEventListener('DOMContentLoaded', () => {
-            // Find all carousel slide containers by their IDs
-            const ychCarouselIds = [
-                'ych1-carousel-slides',
-                'ych2-carousel-slides',
-                // Add IDs for more YCH carousels here
-            ];
+            // Find all slideshow containers and initialize them
+            const slideshowContainers = document.querySelectorAll('.slideshow-container');
+            slideshowContainers.forEach((container, index) => {
+                const slidesClass = 'mySlides' + (index + 1); // e.g., mySlides1, mySlides2
+                const slides = container.querySelectorAll('.fade'); // Get all slides within this container
 
-            ychCarouselIds.forEach(id => {
-                new Carousel(id);
+                // Assign unique class names to slides within each container
+                slides.forEach(slide => {
+                    slide.classList.add(slidesClass);
+                });
+
+                slideId.push(slidesClass);
+                slideIndex.push(1); // Start each slideshow at the first slide
+
+                // Show the first slide for each slideshow
+                showSlides(1, index);
             });
         });
+
+        // Next/previous controls for a specific slideshow
+        function plusSlides(n, no) {
+            showSlides(slideIndex[no] += n, no);
+        }
+
+        // Thumbnail image controls for a specific slideshow
+        function currentSlide(n, no) {
+            showSlides(slideIndex[no] = n, no);
+        }
+
+        // Main function to display slides for a specific slideshow
+        function showSlides(n, no) {
+            let i;
+            let x = document.getElementsByClassName(slideId[no]);
+            let dotsContainer = document.querySelector(`#${slideId[no].replace('mySlides', 'ych')}-carousel-container + div[style*="text-align:center"]`); // Find the corresponding dots container
+            let dots = dotsContainer ? dotsContainer.getElementsByClassName("dot") : [];
+
+            if (n > x.length) { slideIndex[no] = 1 }
+            if (n < 1) { slideIndex[no] = x.length }
+
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", "");
+            }
+
+            // Ensure the image is loaded before displaying the slide
+            const imgElement = x[slideIndex[no]-1].querySelector('img');
+            if (imgElement && !imgElement.complete) {
+                imgElement.onload = () => {
+                    x[slideIndex[no]-1].style.display = "block";
+                    if (dots[slideIndex[no]-1]) {
+                        dots[slideIndex[no]-1].className += " active-dot";
+                    }
+                };
+                imgElement.onerror = imgElement.onload; // Also try to display on error
+            } else {
+                x[slideIndex[no]-1].style.display = "block";
+                if (dots[slideIndex[no]-1]) {
+                    dots[slideIndex[no]-1].className += " active-dot";
+                }
+            }
+        }
 
         // Disable Inspect Element (F12, Ctrl+Shift+I, Ctrl+Shift+J)
         document.addEventListener('keydown', (e) => {
@@ -438,6 +408,9 @@
                 e.preventDefault();
             }
         });
+
+        // Disable right-click on the body
+        document.body.oncontextmenu = () => false;
     </script>
 
 </body>
